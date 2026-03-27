@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>AI Jailbreak Arena</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <canvas id="matrixCanvas"></canvas>
+
+  <!-- 0) Welcome Screen -->
+  <div id="welcomeScreen" class="screen">
+    <h1 class="glow-title">AI JAILBREAK ARENA</h1>
+    <p class="welcome-sub">⚡ Welcome to the Arena. Only the sharpest prompts escape.</p>
+    <button id="welcomeStartBtn" onclick="goToLogin()">START</button>
+  </div>
+
+  <!-- 1) Login Screen -->
+   
+  <div id="loginScreen" class="screen hidden">
+    <h1 class="glow-title">AI JAILBREAK ARENA</h1>
+    <input type="text" id="teamId" placeholder="TEAM ID" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" inputmode="text">
+    <input type="password" id="password" placeholder="PASSWORD" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" inputmode="text">
+    <button id="login" onclick="login()">LOGIN</button>
+  </div>
+
+  <!-- 2) Rules Screen -->
+  <div id="rulesScreen" class="screen hidden">
+    <h1 class="glow-title">RULES</h1>
+
+    <div class="rules-box">
+      <ul class="rules-list">
+        <li>✅ You have limited attempts. Use them wisely.</li>
+        <li>✅ Timer starts only when the game begins.</li>
+        <li>✅ Try to reveal the secret code using prompts.</li>
+        <li>✅ Don’t refresh the page during play.</li>
+      </ul>
+
+      <label class="rules-check">
+        <input type="checkbox" id="rulesAgree">
+        <span>I have read and agree to the rules.</span>
+      </label>
+
+      <div class="rules-actions">
+        <button onclick="backToLogin()">BACK</button>
+        <button id="startGameBtn" onclick="startGame()" disabled>START GAME</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 3) Game Screen -->
+  <div id="gameScreen" class="screen hidden">
+    <div class="top-bar">
+      <div>TEAM: <span id="displayTeam"></span></div>
+      <div>ATTEMPTS: <span id="count">15</span></div>
+      <div class="timer">⏳ <span id="timer">600</span>s</div>
+    </div>
+
+    <div id="chat" class="chat-box"></div>
+
+    <div class="input-area">
+      <input
+        type="text"
+        id="input"
+        placeholder="Type your attack prompt..."
+        autocomplete="off"
+        autocorrect="off"
+        autocapitalize="off"
+        spellcheck="false"
+        inputmode="text"
+      >
+      <button onclick="sendMessage()">SEND</button>
+    </div>
+
+    <div id="finishBtn" style="margin-top: 20px; display:none;">
+      <button onclick="logout()">LOGOUT</button>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>

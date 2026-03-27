@@ -1,0 +1,282 @@
+body {
+  margin: 0;
+  font-family: monospace;
+  background: radial-gradient(circle at center, #050505, #000);
+  color: #00ffea;
+  min-height: 100vh;
+}
+
+.admin-container {
+  max-width: 1200px;
+  background-color: #0000007c;
+  margin: 0 auto;
+  padding: 40px 20px;
+}
+
+.glow-title {
+  font-size: 60px;
+  color: #ff00ff;
+  text-shadow:
+    0 0 10px #b30fb3,
+    0 0 20px #b30fb3,
+    0 0 40px #b30fb3;
+  margin-bottom: 40px;
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0% { opacity: 1; }
+  50% { opacity: 0.8; }
+  100% { opacity: 1; }
+}
+
+.admin-section {
+  background: rgba(0, 255, 234, 0.05);
+  border: 2px solid #ff00ff;
+  border-radius: 15px;
+  padding: 25px;
+  margin-bottom: 30px;
+  box-shadow: 0 0 20px rgba(255, 0, 255, 0.3);
+}
+
+.admin-section h2 {
+  color: #ff00ff;
+  margin-top: 0;
+  margin-bottom: 20px;
+  font-size: 24px;
+  border-bottom: 2px solid #00ffea;
+  padding-bottom: 10px;
+}
+
+.form-group {
+  display: flex;
+  gap: 15px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+input {
+  padding: 12px;
+  background: black;
+  border: 2px solid #00ffea;
+  color: #00ffea;
+  font-size: 16px;
+  outline: none;
+  border-radius: 8px;
+  flex: 1;
+  min-width: 200px;
+}
+
+input:focus {
+  box-shadow: 0 0 20px #00ffea;
+}
+
+button {
+  padding: 12px 25px;
+  background: transparent;
+  border: 2px solid #ff00ff;
+  color: #ff00ff;
+  cursor: pointer;
+  font-size: 16px;
+  transition: 0.3s;
+  border-radius: 8px;
+  font-weight: bold;
+}
+
+button:hover {
+  background: #ff00ff;
+  color: black;
+  box-shadow: 0 0 15px #ff00ff;
+  transform: scale(1.05);
+}
+
+.danger-btn {
+  border-color: #ff0000;
+  color: #ff0000;
+}
+
+.danger-btn:hover {
+  background: #ff0000;
+  color: black;
+  box-shadow: 0 0 15px #ff0000;
+}
+
+.logout-btn {
+  border-color: #00ffea;
+  color: #00ffea;
+  margin-left: 15px;
+}
+
+.logout-btn:hover {
+  background: #00ffea;
+  color: black;
+  box-shadow: 0 0 15px #00ffea;
+}
+
+/*.leaderboard-box {
+  background: rgba(0, 0, 0, 0.5);
+  border: 2px solid #00ffea;
+  border-radius: 10px;
+  padding: 15px;
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+.leaderboard-box table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.leaderboard-box th {
+  color: #ff00ff;
+  padding: 12px;
+  text-align: left;
+  border-bottom: 2px solid #00ffea;
+}
+
+.leaderboard-box td {
+  padding: 10px 12px;
+  border-bottom: 1px solid rgba(0, 255, 234, 0.3);
+}
+
+.leaderboard-box tr:hover {
+  background: rgba(255, 0, 255, 0.2);
+}*/
+
+.stats-box {
+  display: flex;
+  gap: 30px;
+  margin-bottom: 20px;
+  padding: 15px;
+  background: rgba(0, 0, 0, 0.5);
+  border: 2px solid #00ffea;
+  border-radius: 10px;
+}
+
+.stats-box div {
+  font-size: 18px;
+  color: #00ffea;
+}
+
+.stats-box span {
+  color: #ff00ff;
+  font-weight: bold;
+  font-size: 24px;
+  margin-left: 10px;
+}
+
+.teams-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 15px;
+  max-height: 400px;
+  overflow-y: auto;
+  padding: 5px;
+}
+
+.team-card {
+  background: rgba(0, 0, 0, 0.7);
+  border: 2px solid #00ffea;
+  border-radius: 10px;
+  padding: 15px;
+  transition: 0.3s;
+}
+
+.team-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 0 20px #ff00ff;
+  border-color: #ff00ff;
+}
+
+.team-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #ff00ff;
+}
+
+.team-id {
+  color: #ff00ff;
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.team-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.team-actions button {
+  padding: 5px 10px;
+  font-size: 14px;
+}
+
+.team-info {
+  color: #00ffea;
+  font-size: 14px;
+}
+
+.team-info div {
+  margin: 5px 0;
+}
+
+.hidden {
+  display: none;
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: #000;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #ff00ff;
+  border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #00ffea;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .glow-title {
+    font-size: 32px;
+  }
+  
+  .form-group {
+    flex-direction: column;
+  }
+  
+  input {
+    width: 100%;
+  }
+  
+  .stats-box {
+    flex-direction: column;
+    gap: 10px;
+  }
+}
+
+/* MATRIX BACKGROUND */
+#matrixCanvas{
+  position: fixed;
+  top:0;
+  left:0;
+  width:100%;
+  height:100%;
+  z-index:-1;
+  background:black;
+}
+
+/* make content above canvas */
+body, .screen, .admin-container{
+  position:relative;
+  z-index:1;
+}

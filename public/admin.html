@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Admin Panel - AI Jailbreak Arena</title>
+  <link rel="stylesheet" href="admin-style.css">
+</head>
+<body>
+<canvas id="matrixCanvas"></canvas>
+
+<div class="admin-container">
+  <h1 class="glow-title">ADMIN PANEL</h1>
+  
+  <!-- Login for Admin -->
+  <div id="adminLogin" class="admin-section">
+    <h2>ADMIN LOGIN</h2>
+    <input type="password" id="adminPassword" placeholder="ADMIN PASSWORD">
+    <button onclick="adminLogin()">LOGIN</button>
+    <p style="margin-top: 10px; color: #ff00ff;">Default password: Kunj2004</p>
+  </div>
+  
+  <!-- Admin Dashboard (Hidden by default) -->
+  <div id="adminDashboard" class="hidden">
+    
+    <!-- Create Team Section -->
+    <div class="admin-section">
+      <h2>CREATE NEW TEAM</h2>
+      <div class="form-group">
+        <input type="text" id="newTeamId" placeholder="TEAM ID">
+        <input type="password" id="newPassword" placeholder="PASSWORD">
+        <button onclick="createTeam()">CREATE TEAM</button>
+      </div>
+    </div>
+    
+    <!-- Leaderboard Section -->
+    <!-- <div class="admin-section">
+      <h2>🏆 LEADERBOARD</h2>
+      <div class="leaderboard-box">
+        <table style="width: 100%; text-align: left;">
+          <thead>
+            <tr>
+              <th>RANK</th>
+              <th>TEAM</th>
+              <th>ATTEMPTS USED</th>
+              <th>DATE</th>
+            </tr>
+          </thead>
+          <tbody id="leaderboardBody"></tbody>
+        </table>
+      </div>
+    </div> -->
+    
+    <!-- Teams Management Section -->
+    <div class="admin-section">
+      <h2>📋 MANAGE TEAMS</h2>
+      <div class="stats-box">
+        <div>Total Teams: <span id="totalTeams">0</span></div>
+        <div>Active Games: <span id="activeGames">0</span></div>
+      </div>
+      <div class="teams-grid" id="teamsList"></div>
+    </div>
+    
+    <!-- Reset All Button -->
+    <div class="admin-section">
+      <button onclick="resetAllTeams()" class="danger-btn">RESET ALL TEAMS</button>
+      <button onclick="logout()" class="logout-btn">LOGOUT</button>
+    </div>
+  </div>
+</div>
+
+<script src="admin.js"></script>
+</body>
+</html>
