@@ -53,7 +53,7 @@ window.addEventListener("resize", ()=>{
 });
 
 // Admin password (you can change this)
-const ADMIN_PASSWORD = "Kunj2004";
+const ADMIN_PASSWORD = "GICSA";
 
 function adminLogin() {
     const password = document.getElementById("adminPassword").value;
