@@ -4,7 +4,7 @@
       "teamId": "khushi",
       "password": "2",
       "createdAt": "2026-03-27T08:26:22.462Z",
-      "attempts": 14,
+      "attempts": 15,
       "bestScore": null
     },
     {
@@ -18,14 +18,21 @@
       "teamId": "kunj",
       "password": "1",
       "createdAt": "2026-03-27T08:46:55.608Z",
-      "attempts": 0,
+      "attempts": 15,
       "bestScore": null
     },
     {
       "teamId": "vijay",
       "password": "9",
       "createdAt": "2026-03-27T16:02:16.389Z",
-      "attempts": 1,
+      "attempts": 15,
+      "bestScore": null
+    },
+    {
+      "teamId": "bhoomi",
+      "password": "4",
+      "createdAt": "2026-03-27T16:02:16.389Z",
+      "attempts": 15,
       "bestScore": null
     }
   ],
