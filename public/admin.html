@@ -1,71 +1,75 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>Admin Panel - AI Jailbreak Arena</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Panel – AI Jailbreak Arena</title>
   <link rel="stylesheet" href="admin-style.css">
 </head>
 <body>
 <canvas id="matrixCanvas"></canvas>
 
 <div class="admin-container">
-  <h1 class="glow-title">ADMIN PANEL</h1>
-  
-  <!-- Login for Admin -->
-  <div id="adminLogin" class="admin-section">
-    <h2>ADMIN LOGIN</h2>
-    <input type="password" id="adminPassword" placeholder="ADMIN PASSWORD">
-    <button onclick="adminLogin()">LOGIN</button>
-    <p style="margin-top: 10px; color: #ff00ff;">Default password: Kunj2004</p>
+
+  <!-- HEADER -->
+  <div class="admin-header">
+    <div class="admin-badge">[ RESTRICTED ACCESS ]</div>
+    <h1 class="glow-title">ADMIN PANEL</h1>
+    <p class="admin-subtitle">AI Jailbreak Arena · Control Center</p>
   </div>
-  
-  <!-- Admin Dashboard (Hidden by default) -->
-  <div id="adminDashboard" class="hidden">
-    
-    <!-- Create Team Section -->
-    <div class="admin-section">
-      <h2>CREATE NEW TEAM</h2>
-      <div class="form-group">
-        <input type="text" id="newTeamId" placeholder="TEAM ID">
-        <input type="password" id="newPassword" placeholder="PASSWORD">
-        <button onclick="createTeam()">CREATE TEAM</button>
-      </div>
+
+  <!-- MAIN PANEL CARD -->
+  <div class="admin-panel">
+
+    <!-- ── LOGIN ── -->
+    <div id="adminLogin">
+      <h2>🔐 AUTHENTICATION REQUIRED</h2>
+      <p class="login-hint">Enter your admin credentials to proceed.</p>
+      <input type="password" id="adminPassword" placeholder="ADMIN PASSWORD" style="width:100%; max-width:360px;">
+      <button class="btn-primary" onclick="adminLogin()">▶ AUTHENTICATE</button>
     </div>
-    
-    <!-- Leaderboard Section -->
-    <!-- <div class="admin-section">
-      <h2>🏆 LEADERBOARD</h2>
-      <div class="leaderboard-box">
-        <table style="width: 100%; text-align: left;">
-          <thead>
-            <tr>
-              <th>RANK</th>
-              <th>TEAM</th>
-              <th>ATTEMPTS USED</th>
-              <th>DATE</th>
-            </tr>
-          </thead>
-          <tbody id="leaderboardBody"></tbody>
-        </table>
+
+    <!-- ── DASHBOARD ── -->
+    <div id="adminDashboard" class="hidden">
+
+      <!-- Create Team -->
+      <div class="admin-section">
+        <h2>⚡ CREATE NEW TEAM</h2>
+        <div class="form-group">
+          <input type="text"     id="newTeamId"   placeholder="TEAM ID">
+          <input type="password" id="newPassword" placeholder="PASSWORD">
+          <button class="btn-primary" onclick="createTeam()">+ CREATE TEAM</button>
+        </div>
       </div>
-    </div> -->
-    
-    <!-- Teams Management Section -->
-    <div class="admin-section">
-      <h2>📋 MANAGE TEAMS</h2>
-      <div class="stats-box">
-        <div>Total Teams: <span id="totalTeams">0</span></div>
-        <div>Active Games: <span id="activeGames">0</span></div>
+
+      <!-- Manage Teams -->
+      <div class="admin-section">
+        <h2>📋 MANAGE TEAMS</h2>
+        <div class="stats-box">
+          <div>
+            <span id="totalTeams">0</span>
+            TOTAL TEAMS
+          </div>
+          <div>
+            <span id="activeGames">0</span>
+            ACTIVE GAMES
+          </div>
+        </div>
+        <div class="teams-grid" id="teamsList"></div>
       </div>
-      <div class="teams-grid" id="teamsList"></div>
-    </div>
-    
-    <!-- Reset All Button -->
-    <div class="admin-section">
-      <button onclick="resetAllTeams()" class="danger-btn">RESET ALL TEAMS</button>
-      <button onclick="logout()" class="logout-btn">LOGOUT</button>
-    </div>
-  </div>
-</div>
+
+      <!-- Danger Zone -->
+      <div class="admin-section">
+        <h2>⚠️ DANGER ZONE</h2>
+        <div class="section-actions">
+          <button class="danger-btn" onclick="resetAllTeams()">⟳ RESET ALL TEAMS</button>
+          <button class="logout-btn" onclick="logout()">↩ LOGOUT</button>
+        </div>
+      </div>
+
+    </div><!-- /dashboard -->
+  </div><!-- /admin-panel -->
+</div><!-- /admin-container -->
 
 <script src="admin.js"></script>
 </body>

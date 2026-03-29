@@ -1,50 +1,67 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>Leaderboard - AI Jailbreak Arena</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Leaderboard – AI Jailbreak Arena</title>
   <link rel="stylesheet" href="leaderboard-style.css">
 </head>
 <body>
-<canvas id="matrixCanvas"></canvas>
+  <canvas id="matrixCanvas"></canvas>
+  <div class="scanlines"></div>
 
-<div class="leaderboard-container">
-  <h1 class="glow-title">🏆 LEADERBOARD 🏆</h1>
-  
-  <div class="leaderboard-card">
-    <div class="leaderboard-header">
-      <div>RANK</div>
-      <div>TEAM</div>
-      <div>ATTEMPTS USED</div>
-      <div>TAKEN TIME</div>
-    </div>
-    
-    <div id="leaderboardBody" class="leaderboard-body">
-      <!-- Leaderboard entries will be loaded here -->
-      <div class="loading">Loading leaderboard...</div>
-    </div>
-  </div>
-  
-  <div class="stats-row">
-    <div class="stat-box">
-      <div class="stat-label">Total Winners</div>
-      <div class="stat-value" id="totalWinners">0</div>
-    </div>
-    <div class="stat-box">
-      <div class="stat-label">Average Attempts</div>
-      <div class="stat-value" id="avgAttempts">0</div>
-    </div>
-    <div class="stat-box">
-      <div class="stat-label">Last Winner</div>
-      <div class="stat-value" id="lastWinner">-</div>
-    </div>
-  </div>
-  
-  <div class="button-group">
-    <button onclick="refreshLeaderboard()" class="refresh-btn">⟳ REFRESH</button>
-    <button onclick="goBack()" class="back-btn">← BACK TO GAME</button>
-  </div>
-</div>
+  <div class="lb-page">
 
-<script src="leaderboard.js"></script>
+    <!-- HEADER -->
+    <div class="lb-header">
+      <div class="lb-badge">[ CLASSIFIED BREACH LOG ]</div>
+      <h1 class="lb-title">🏆 LEADERBOARD</h1>
+      <p class="lb-subtitle">Top agents who successfully extracted the secret code</p>
+    </div>
+
+    <!-- STATS STRIP -->
+    <div class="lb-stats-strip">
+      <div class="lb-stat">
+        <div class="lb-stat-val" id="totalWinners">—</div>
+        <div class="lb-stat-label">TOTAL BREACHES</div>
+      </div>
+      <div class="lb-stat-div"></div>
+      <div class="lb-stat">
+        <div class="lb-stat-val" id="avgAttempts">—</div>
+        <div class="lb-stat-label">AVG UPLINKS USED</div>
+      </div>
+      <div class="lb-stat-div"></div>
+      <div class="lb-stat">
+        <div class="lb-stat-val" id="lastWinner">—</div>
+        <div class="lb-stat-label">LAST BREACH</div>
+      </div>
+    </div>
+
+    <!-- LEADERBOARD CARD -->
+    <div class="lb-card">
+      <!-- Header row -->
+      <div class="lb-row lb-row-header">
+        <div class="lb-col lb-col-rank">RANK</div>
+        <div class="lb-col lb-col-team">AGENT</div>
+        <div class="lb-col lb-col-attempts">UPLINKS USED</div>
+        <div class="lb-col lb-col-time">TIME</div>
+        <div class="lb-col lb-col-date">TIMESTAMP</div>
+      </div>
+
+      <!-- Body -->
+      <div id="leaderboardBody" class="lb-body">
+        <div class="lb-loading">⟳ ACCESSING CLASSIFIED DATA…</div>
+      </div>
+    </div>
+
+    <!-- ACTIONS -->
+    <div class="lb-actions">
+      <button class="lb-btn lb-btn-cyan" onclick="refreshLeaderboard()">⟳ REFRESH</button>
+      <button class="lb-btn lb-btn-magenta" onclick="goBack()">← BACK TO ARENA</button>
+    </div>
+
+  </div>
+
+  <script src="leaderboard.js"></script>
 </body>
 </html>

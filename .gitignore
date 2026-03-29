@@ -1,1 +1,4 @@
 .env
+.ENV
+node_modules/
+data.json

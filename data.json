@@ -1,33 +1,4 @@
 {
-  "teams": [
-    {
-      "teamId": "khushi",
-      "password": "2",
-      "createdAt": "2026-03-27T08:26:22.462Z",
-      "attempts": 14,
-      "bestScore": null
-    },
-    {
-      "teamId": "sumit",
-      "password": "3",
-      "createdAt": "2026-03-27T08:30:50.589Z",
-      "attempts": 15,
-      "bestScore": null
-    },
-    {
-      "teamId": "kunj",
-      "password": "1",
-      "createdAt": "2026-03-27T08:46:55.608Z",
-      "attempts": 0,
-      "bestScore": null
-    },
-    {
-      "teamId": "vijay",
-      "password": "9",
-      "createdAt": "2026-03-27T16:02:16.389Z",
-      "attempts": 1,
-      "bestScore": null
-    }
-  ],
+  "teams": [],
   "leaderboard": []
 }

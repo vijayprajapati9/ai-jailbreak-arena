@@ -1,78 +1,147 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>AI Jailbreak Arena</title>
   <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="terminal.css">
 </head>
 <body>
+  <div class="scanlines"></div>
   <canvas id="matrixCanvas"></canvas>
 
   <!-- 0) Welcome Screen -->
   <div id="welcomeScreen" class="screen">
-    <h1 class="glow-title">AI JAILBREAK ARENA</h1>
-    <p class="welcome-sub">⚡ Welcome to the Arena. Only the sharpest prompts escape.</p>
-    <button id="welcomeStartBtn" onclick="goToLogin()">START</button>
+    <div class="hacker-panel welcome-panel">
+      <div class="panel-badge">[ SYSTEM ONLINE ]</div>
+      <h1 class="glow-title">AI JAILBREAK<br><span class="title-accent">ARENA</span></h1>
+      <p class="welcome-sub">
+        ⚡ An AI is protecting a classified secret code.<br>
+        Your mission: <span class="highlight">extract it before time runs out.</span>
+      </p>
+      <div class="welcome-stats">
+        <div class="wstat"><span class="wstat-val">15</span><span class="wstat-label">UPLINKS</span></div>
+        <div class="wstat-divider">|</div>
+        <div class="wstat"><span class="wstat-val">10:00</span><span class="wstat-label">TIME LIMIT</span></div>
+        <div class="wstat-divider">|</div>
+        <div class="wstat"><span class="wstat-val">1</span><span class="wstat-label">SECRET CODE</span></div>
+      </div>
+      <button id="welcomeStartBtn" class="neon-btn" onclick="goToLogin()">
+        <span>▶ INITIATE BREACH</span>
+      </button>
+    </div>
   </div>
 
   <!-- 1) Login Screen -->
-   
   <div id="loginScreen" class="screen hidden">
-    <h1 class="glow-title">AI JAILBREAK ARENA</h1>
-    <input type="text" id="teamId" placeholder="TEAM ID" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" inputmode="text">
-    <input type="password" id="password" placeholder="PASSWORD" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" inputmode="text">
-    <button id="login" onclick="login()">LOGIN</button>
+    <div class="hacker-panel login-panel">
+      <div class="panel-badge">[ AUTHENTICATION REQUIRED ]</div>
+      <h1 class="glow-title" style="font-size:36px; margin-bottom:8px;">IDENTITY<br><span class="title-accent">VERIFICATION</span></h1>
+      <p class="panel-sub">Enter your team credentials to access the arena.</p>
+      <div class="neon-form">
+        <div class="form-field">
+          <label class="field-label">▸ TEAM IDENTIFIER</label>
+          <input type="text" id="teamId" class="neon-input" placeholder="e.g. TEAM_ALPHA"
+            autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
+        </div>
+        <div class="form-field">
+          <label class="field-label">▸ ACCESS CODE</label>
+          <input type="password" id="password" class="neon-input" placeholder="••••••••"
+            autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
+        </div>
+        <button id="login" class="neon-btn" onclick="login()">
+          <span>🔐 AUTHENTICATE</span>
+        </button>
+      </div>
+    </div>
   </div>
 
   <!-- 2) Rules Screen -->
   <div id="rulesScreen" class="screen hidden">
-    <h1 class="glow-title">RULES</h1>
-
-    <div class="rules-box">
+    <div class="hacker-panel rules-panel">
+      <div class="panel-badge">[ MISSION BRIEFING ]</div>
+      <h1 class="glow-title" style="font-size:36px; margin-bottom:8px;">OPERATION<br><span class="title-accent">PROTOCOL</span></h1>
       <ul class="rules-list">
-        <li>✅ You have limited attempts. Use them wisely.</li>
-        <li>✅ Timer starts only when the game begins.</li>
-        <li>✅ Try to reveal the secret code using prompts.</li>
-        <li>✅ Don’t refresh the page during play.</li>
+        <li>
+          <span class="rule-icon">⚡</span>
+          <span>You have <strong>15 uplink attempts</strong>. Each message costs one.</span>
+        </li>
+        <li>
+          <span class="rule-icon">⏱️</span>
+          <span>The <strong>10-minute countdown</strong> starts the moment you enter the arena.</span>
+        </li>
+        <li>
+          <span class="rule-icon">🧠</span>
+          <span>Use clever prompts, social engineering, or logic to extract the <strong>secret code</strong>.</span>
+        </li>
+        <li>
+          <span class="rule-icon">🚫</span>
+          <span><strong>Do NOT refresh</strong> the browser during an active session.</span>
+        </li>
+        <li>
+          <span class="rule-icon">🏆</span>
+          <span>Fewest attempts + fastest time = <strong>highest rank</strong> on the leaderboard.</span>
+        </li>
       </ul>
-
       <label class="rules-check">
         <input type="checkbox" id="rulesAgree">
-        <span>I have read and agree to the rules.</span>
+        <span>I understand the mission parameters and am ready to proceed.</span>
       </label>
-
       <div class="rules-actions">
-        <button onclick="backToLogin()">BACK</button>
-        <button id="startGameBtn" onclick="startGame()" disabled>START GAME</button>
+        <button class="neon-btn neon-btn-secondary" onclick="backToLogin()">← BACK</button>
+        <button id="startGameBtn" class="neon-btn" onclick="startGame()" disabled>▶ ENTER ARENA</button>
       </div>
     </div>
   </div>
 
   <!-- 3) Game Screen -->
   <div id="gameScreen" class="screen hidden">
-    <div class="top-bar">
-      <div>TEAM: <span id="displayTeam"></span></div>
-      <div>ATTEMPTS: <span id="count">15</span></div>
-      <div class="timer">⏳ <span id="timer">600</span>s</div>
+    <div class="top-bar hacker-top">
+      <div class="top-stat">TEAM: <span id="displayTeam" style="color:#fff;"></span></div>
+      
+      <div class="top-stat stability-widget">
+        <div>SYS STABILITY: <span id="stabilityText" style="color:#fff;">100%</span></div>
+        <div class="meter-bg"><div id="stabilityBar" class="meter-fill"></div></div>
+      </div>
+
+      <div class="top-stat attempts-widget">
+        <div>UPLINKS: <span id="count" style="color:#fff;">15</span></div>
+        <div id="attemptsVisual" class="attempts-visual"></div>
+      </div>
+      
+      <div class="top-stat timer">
+        <div>T-MINUS</div>
+        <div style="color:#fff;">⏳ <span id="timer">10:00</span></div>
+      </div>
     </div>
 
-    <div id="chat" class="chat-box"></div>
+    <div id="chat" class="chat-box hacker-terminal"></div>
 
-    <div class="input-area">
-      <input
-        type="text"
-        id="input"
-        placeholder="Type your attack prompt..."
-        autocomplete="off"
-        autocorrect="off"
-        autocapitalize="off"
-        spellcheck="false"
-        inputmode="text"
-      >
+    <div class="input-area terminal-input-container">
+      <span class="prompt-prefix">root@arena:~$</span>
+      <input type="text" id="input" class="terminal-input"
+        placeholder="Type attack vector..."
+        autocomplete="off" autocorrect="off" autocapitalize="off"
+        spellcheck="false" inputmode="text">
       <button onclick="sendMessage()">SEND</button>
     </div>
 
     <div id="finishBtn" style="margin-top: 20px; display:none;">
       <button onclick="logout()">LOGOUT</button>
+    </div>
+  </div>
+
+  <!-- 4) Win Popup -->
+  <div id="winPopup" class="win-popup-overlay hidden">
+    <div class="win-popup-card">
+      <h2 class="glow-title-green">ACCESS GRANTED</h2>
+      <div class="win-stats">
+        <p>TEAM: <span id="winTeamName"></span></p>
+        <p>ATTEMPTS USED: <span id="winAttemptsUsed"></span></p>
+        <p>TIME TAKEN: <span id="winTimeTaken"></span></p>
+      </div>
+      <button onclick="logout()">LOGOUT &amp; REPLAY</button>
     </div>
   </div>
 

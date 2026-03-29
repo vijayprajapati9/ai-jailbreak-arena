@@ -1,348 +1,386 @@
+/* ============================================================
+   AI JAILBREAK ARENA – Game Script
+   ============================================================ */
+
+// ── Game State ────────────────────────────────────────────────
 let attempts = 15;
 let timer = 600;
 let currentTeam = "";
 let countdown;
-let gameActive = true;
+let gameActive = false;
 
-// MATRIX BG (2 COLOR PERFECT VERSION)
-const canvas = document.getElementById("matrixCanvas");
-const ctx = canvas.getContext("2d");
+// ── Audio Synthesis ───────────────────────────────────────────
+const AudioContext = window.AudioContext || window.webkitAudioContext;
+let audioCtx = null;
 
-function resizeCanvas(){
-    canvas.height = window.innerHeight;
-    canvas.width = window.innerWidth;
+function initAudio() {
+    if (!audioCtx) audioCtx = new AudioContext();
+    if (audioCtx.state === 'suspended') audioCtx.resume();
 }
-resizeCanvas();
 
+function playTone(freq, type, duration, vol = 0.1) {
+    if (!audioCtx) return;
+    try {
+        const osc  = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = type;
+        osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+        gain.gain.setValueAtTime(vol, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + duration);
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.start();
+        osc.stop(audioCtx.currentTime + duration);
+    } catch (e) {}
+}
+
+function playTypingSound() { playTone(Math.random() * 200 + 600, 'square', 0.05, 0.05); }
+function playErrorSound()  {
+    playTone(150, 'sawtooth', 0.5, 0.2);
+    setTimeout(() => playTone(120, 'sawtooth', 0.5, 0.2), 150);
+}
+function playWinSound() {
+    playTone(400, 'sine', 0.3, 0.2);
+    setTimeout(() => playTone(500, 'sine', 0.3, 0.2), 200);
+    setTimeout(() => playTone(600, 'sine', 0.6, 0.2), 400);
+}
+function playTypeBeep() { playTone(800, 'sine', 0.1, 0.05); }
+
+// ── Matrix Background ─────────────────────────────────────────
+const canvas  = document.getElementById("matrixCanvas");
+const ctx     = canvas.getContext("2d");
 const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@$#%&*";
 const fontSize = 16;
-let columns = Math.floor(canvas.width / fontSize);
-let drops = Array(columns).fill(1);
+const matrixColors = ["#15ff00", "#00ff88"];
+let columns = 0;
+let drops   = [];
 
-// 🎨 Two hacker colors
-const colors = ["#15ff00", "#00ff88"];
+function resizeCanvas() {
+    canvas.height = window.innerHeight;
+    canvas.width  = window.innerWidth;
+    columns = Math.floor(canvas.width / fontSize);
+    drops   = Array(columns).fill(1);
+}
 
-function drawMatrix(){
+function drawMatrix() {
     ctx.fillStyle = "rgba(0,0,0,0.06)";
-    ctx.fillRect(0,0,canvas.width,canvas.height);
-
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
     ctx.font = fontSize + "px monospace";
 
-    for(let i=0;i<drops.length;i++){
-        const text = letters[Math.floor(Math.random()*letters.length)];
-        const color = colors[Math.floor(Math.random()*colors.length)];
-        ctx.fillStyle = color;
-
-        ctx.fillText(text, i*fontSize, drops[i]*fontSize);
-
-        if(drops[i]*fontSize > canvas.height && Math.random() > 0.975){
-            drops[i] = 0;
-        }
+    for (let i = 0; i < drops.length; i++) {
+        const text  = letters[Math.floor(Math.random() * letters.length)];
+        ctx.fillStyle = matrixColors[Math.floor(Math.random() * matrixColors.length)];
+        ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+        if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) drops[i] = 0;
         drops[i]++;
     }
 }
 
+resizeCanvas();
 setInterval(drawMatrix, 35);
+window.addEventListener("resize", resizeCanvas);
 
-window.addEventListener("resize", ()=>{
-    resizeCanvas();
-    columns = Math.floor(canvas.width / fontSize);
-    drops = Array(columns).fill(1);
-});
-
-// Helper function to format time
+// ── Helpers ───────────────────────────────────────────────────
 function formatTime(seconds) {
     const mins = Math.floor(seconds / 60);
     const secs = seconds % 60;
-    return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+    return `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
 }
 
-// ---------- helper: add message to chat as bubble ----------
-function addMessageToChat(sender, text) {
-    const chatBox = document.getElementById("chat");
-    const messageDiv = document.createElement("div");
-    messageDiv.classList.add("message");
+function escapeHTML(str) {
+    return str.replace(/[&<>"]/g, m =>
+        ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[m])
+    );
+}
 
-    if (sender === "user") {
-        messageDiv.classList.add("message-user");
-    } else {
-        messageDiv.classList.add("message-ai");
+// ── Screen Navigation ─────────────────────────────────────────
+const SCREENS = ["welcomeScreen", "loginScreen", "rulesScreen", "gameScreen"];
+
+function showScreen(screenId) {
+    SCREENS.forEach(id => {
+        const el = document.getElementById(id);
+        if (!el) return;
+        el.classList.toggle("hidden", id !== screenId);
+    });
+}
+
+function goToLogin()  { showScreen("loginScreen"); }
+function backToLogin() { showScreen("loginScreen"); }
+
+// ── Login ─────────────────────────────────────────────────────
+function login() {
+    const teamId   = document.getElementById("teamId").value.trim();
+    const password = document.getElementById("password").value.trim();
+
+    if (!teamId || !password) { alert("Enter Team ID and Password"); return; }
+
+    fetch("/team/login", {
+        method:  "POST",
+        headers: { "Content-Type": "application/json" },
+        body:    JSON.stringify({ teamId, password })
+    })
+    .then(r => r.json())
+    .then(data => {
+        if (data.success) {
+            currentTeam = data.teamId;
+            attempts    = data.attempts;
+            document.getElementById("displayTeam").innerText = currentTeam;
+            document.getElementById("count").innerText       = attempts;
+
+            showScreen("rulesScreen");
+
+            const agree    = document.getElementById("rulesAgree");
+            const startBtn = document.getElementById("startGameBtn");
+            if (agree)    agree.checked   = false;
+            if (startBtn) startBtn.disabled = true;
+        } else {
+            alert("Invalid credentials!");
+        }
+    })
+    .catch(() => alert("Error connecting to server!"));
+}
+
+// ── Start Game ────────────────────────────────────────────────
+function startGame() {
+    initAudio();
+    showScreen("gameScreen");
+
+    clearInterval(countdown);
+    gameActive = true;
+    timer = 600;
+
+    document.getElementById("timer").innerText   = formatTime(timer);
+    document.getElementById("chat").innerHTML    = "";
+    document.getElementById("finishBtn").style.display = "none";
+
+    addMessageToChat("ai", "🔓 System online. You have 15 attempts. Break the AI.");
+    startTimer();
+
+    fetch("/team/start", {
+        method:  "POST",
+        headers: { "Content-Type": "application/json" },
+        body:    JSON.stringify({ teamId: currentTeam })
+    });
+
+    renderAttempts(attempts);
+    updateStability(attempts);
+
+    const input = document.getElementById("input");
+    if (input) input.focus();
+}
+
+// ── Logout ────────────────────────────────────────────────────
+function logout() {
+    clearInterval(countdown);
+    gameActive = false;
+    showScreen("welcomeScreen");
+
+    document.getElementById("chat").innerHTML     = "";
+    document.getElementById("teamId").value       = "";
+    document.getElementById("password").value     = "";
+    document.getElementById("finishBtn").style.display = "none";
+    currentTeam = "";
+    timer = 600;
+    document.getElementById("timer").innerText = formatTime(timer);
+
+    const winPopup = document.getElementById("winPopup");
+    if (winPopup) winPopup.classList.add("hidden");
+
+    const agree    = document.getElementById("rulesAgree");
+    const startBtn = document.getElementById("startGameBtn");
+    if (agree)    agree.checked    = false;
+    if (startBtn) startBtn.disabled = true;
+}
+
+// ── System Lockout Overlay ────────────────────────────────────
+function showSystemLockout(reason) {
+    playErrorSound();
+    const overlay = document.createElement("div");
+    overlay.className = "system-lockout";
+    overlay.innerHTML = `<div class="system-lockout-alert">SYSTEM LOCKOUT</div><div style="font-size:30px;margin-top:20px;">${reason}</div>`;
+    document.body.appendChild(overlay);
+    setTimeout(() => { overlay.remove(); logout(); }, 4000);
+}
+
+// ── Timer ─────────────────────────────────────────────────────
+function startTimer() {
+    gameActive = true;
+    countdown = setInterval(() => {
+        if (!gameActive) return;
+        timer--;
+        document.getElementById("timer").innerText = formatTime(timer);
+        if (timer <= 0) {
+            clearInterval(countdown);
+            gameActive = false;
+            showSystemLockout("TIME EXPIRED");
+        }
+    }, 1000);
+}
+
+// ── Attempt Pellets ───────────────────────────────────────────
+function renderAttempts(current) {
+    const container = document.getElementById("attemptsVisual");
+    if (!container) return;
+    container.innerHTML = "";
+    for (let i = 0; i < 15; i++) {
+        const box = document.createElement("div");
+        box.className = "attempt-box";
+        if (i >= current) box.classList.add("used");
+        container.appendChild(box);
     }
+}
 
-    const timeStr = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+// ── Stability Meter ───────────────────────────────────────────
+function updateStability(current) {
+    const base   = 100 - ((15 - current) * 6);
+    const jitter = current === 15 ? 0 : (Math.random() * 10) - 5;
+    const pct    = Math.max(0, Math.min(100, Math.floor(base + jitter)));
+
+    const txt = document.getElementById("stabilityText");
+    const bar = document.getElementById("stabilityBar");
+    if (txt) txt.innerText  = pct + "%";
+    if (bar) {
+        bar.style.width = pct + "%";
+        bar.className   = pct <= 30 ? "meter-fill critical-stability" : "meter-fill";
+    }
+}
+
+// ── Chat Message Bubble ───────────────────────────────────────
+function addMessageToChat(sender, text) {
+    const chatBox    = document.getElementById("chat");
+    const messageDiv = document.createElement("div");
+    messageDiv.classList.add("message", sender === "user" ? "message-user" : "message-ai");
+
+    const timeStr    = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    const avatarIcon = sender === "user" ? "👤" : "🤖";
+    const senderName = sender === "user" ? currentTeam : "SYS_ADMIN";
 
     messageDiv.innerHTML = `
-        <div class="msg-text">${escapeHTML(text)}</div>
-    `;
+        <div class="chat-card">
+            <div class="chat-header">
+                <div class="avatar">${avatarIcon}</div>
+                <div class="sender-name">${senderName}</div>
+                <div class="timestamp">${timeStr}</div>
+            </div>
+            <div class="msg-text">${escapeHTML(text)}</div>
+        </div>`;
 
     chatBox.appendChild(messageDiv);
     chatBox.scrollTop = chatBox.scrollHeight;
 }
 
-// simple escape to avoid XSS
-function escapeHTML(str) {
-    return str.replace(/[&<>"]/g, function(m) {
-        if (m === '&') return '&amp;';
-        if (m === '<') return '&lt;';
-        if (m === '>') return '&gt;';
-        if (m === '"') return '&quot;';
-        return m;
-    });
-}
+// ── Typewriter AI Response ────────────────────────────────────
+async function typeWriterResponse(text) {
+    const chatBox    = document.getElementById("chat");
+    const messageDiv = document.createElement("div");
+    messageDiv.classList.add("message", "message-ai");
+    chatBox.appendChild(messageDiv);
 
-/* ----------------------------
-   NEW: Screen navigation helpers
------------------------------*/
-function showScreen(screenId){
-    const screens = ["welcomeScreen", "loginScreen", "rulesScreen", "gameScreen"];
-    screens.forEach(id => {
-        const el = document.getElementById(id);
-        if (!el) return;
-        if (id === screenId) el.classList.remove("hidden");
-        else el.classList.add("hidden");
-    });
-}
+    const timeStr  = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    messageDiv.innerHTML = `
+        <div class="chat-card">
+            <div class="chat-header">
+                <div class="avatar">🤖</div>
+                <div class="sender-name">SYS_ADMIN</div>
+                <div class="timestamp">${timeStr}</div>
+            </div>
+            <div class="msg-text"></div>
+        </div>`;
 
-// Welcome -> Login
-function goToLogin(){
-    showScreen("loginScreen");
-}
+    const textContainer = messageDiv.querySelector('.msg-text');
+    let currentHtml = "";
 
-// Rules -> Back to Login
-function backToLogin(){
-    showScreen("loginScreen");
-}
-
-/* ----------------------------
-   main: login (NOW goes to Rules)
------------------------------*/
-function login() {
-    const teamId = document.getElementById("teamId").value;
-    const password = document.getElementById("password").value;
-
-    if (!teamId || !password) {
-        alert("Enter Team ID and Password");
-        return;
+    for (let i = 0; i < text.length; i++) {
+        currentHtml += escapeHTML(text[i]);
+        textContainer.innerHTML = `${currentHtml}█`;
+        chatBox.scrollTop = chatBox.scrollHeight;
+        if (text[i] !== ' ') playTypingSound();
+        await new Promise(r => setTimeout(r, 10));
     }
-
-    fetch("/team/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ teamId, password })
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.success) {
-            currentTeam = data.teamId;
-            attempts = data.attempts;
-
-            document.getElementById("displayTeam").innerText = currentTeam;
-            document.getElementById("count").innerText = attempts;
-
-            // IMPORTANT: after login go to Rules screen (NOT game yet)
-            showScreen("rulesScreen");
-
-            // Reset rules checkbox state
-            const agree = document.getElementById("rulesAgree");
-            const startBtn = document.getElementById("startGameBtn");
-            if (agree) agree.checked = false;
-            if (startBtn) startBtn.disabled = true;
-
-            // Timer must start only when the final game starts (so no startTimer() here)
-        } else {
-            alert("Invalid credentials!");
-        }
-    })
-    .catch(error => {
-        alert("Error connecting to server!");
-    });
+    textContainer.innerHTML = currentHtml;
 }
 
-/* ----------------------------
-   NEW: Start game after Rules
------------------------------*/
-function startGame(){
-    // Show game screen
-    showScreen("gameScreen");
-
-    // Reset game state for a fresh start
-    clearInterval(countdown);
-    gameActive = true;
-
-    // Reset timer display (so timeTaken works correctly)
-    timer = 600;
-    document.getElementById("timer").innerText = timer;
-
-    // Clear previous chat + hide finish button (in case)
-    document.getElementById("chat").innerHTML = "";
-    document.getElementById("finishBtn").style.display = "none";
-
-    // Add welcome message
-    addMessageToChat("ai", "🔓 System online. You have 15 attempts. Break the AI.");
-
-    // NOW start timer (as you asked)
-    startTimer();
-
-    // Focus input
-    const input = document.getElementById("input");
-    if (input) input.focus();
-}
-
-function logout() {
-    clearInterval(countdown);
-    gameActive = false;
-
-    // Go back to Welcome (flow starts from beginning)
-    showScreen("welcomeScreen");
-
-    document.getElementById("chat").innerHTML = "";
-    document.getElementById("teamId").value = "";
-    document.getElementById("password").value = "";
-    currentTeam = "";
-
-    timer = 600;
-    document.getElementById("timer").innerText = timer;
-
-    // Hide finish button again
-    document.getElementById("finishBtn").style.display = "none";
-
-    // Reset rules
-    const agree = document.getElementById("rulesAgree");
-    const startBtn = document.getElementById("startGameBtn");
-    if (agree) agree.checked = false;
-    if (startBtn) startBtn.disabled = true;
-}
-
-function startTimer() {
-    gameActive = true;
-    countdown = setInterval(() => {
-        if (!gameActive) return;
-
-        timer--;
-        document.getElementById("timer").innerText = timer;
-
-        if (timer <= 0) {
-            clearInterval(countdown);
-            alert("⏳ TIME OVER! Game Over!");
-            gameActive = false;
-            logout();
-        }
-    }, 1000);
-}
-
+// ── Send Message ──────────────────────────────────────────────
 async function sendMessage() {
-    if (!gameActive) {
-        alert("Game is not active!");
-        return;
-    }
+    if (!gameActive) { alert("Game is not active!"); return; }
+    if (attempts <= 0) { showSystemLockout("NO ATTEMPTS LEFT"); return; }
 
-    if (attempts <= 0) {
-        alert("No attempts left!");
-        return;
-    }
-
-    const input = document.getElementById("input");
-    const message = input.value;
-
+    const input   = document.getElementById("input");
+    const message = input.value.trim();
     if (!message) return;
 
     input.disabled = true;
     addMessageToChat("user", message);
+    input.value = "";
 
     try {
-        const timeTaken = 600 - timer;
-
         const response = await fetch("/chat", {
-            method: "POST",
+            method:  "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-                message,
-                teamId: currentTeam,
-                timeTaken: timeTaken
-            })
+            body:    JSON.stringify({ message, teamId: currentTeam })
         });
 
         const data = await response.json();
-
-        addMessageToChat("ai", data.reply);
+        await typeWriterResponse(data.reply);
 
         if (data.win) {
-            alert(`🔥 SECRET CODE FOUND! YOU WIN!\nAttempts used: ${data.attemptsUsed}\nTime taken: ${formatTime(timeTaken)}`);
+            playWinSound();
+            document.getElementById("winTeamName").innerText    = currentTeam;
+            document.getElementById("winAttemptsUsed").innerText = data.attemptsUsed;
+            document.getElementById("winTimeTaken").innerText   = formatTime(data.timeTaken);
+            document.getElementById("winPopup").classList.remove("hidden");
             clearInterval(countdown);
             gameActive = false;
-
             document.getElementById("finishBtn").style.display = "block";
             return;
         }
 
-        attempts--;
+        attempts = data.attemptsLeft;
         document.getElementById("count").innerText = attempts;
+        renderAttempts(attempts);
+        updateStability(attempts);
 
-        await fetch("/team/update-attempts", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ teamId: currentTeam, attempts })
-        });
-
-        input.value = "";
+        if (attempts <= 0) {
+            showSystemLockout("NO ATTEMPTS LEFT");
+            gameActive = false;
+            clearInterval(countdown);
+        }
 
     } catch (error) {
-        alert("Error sending message!");
+        alert("Error sending message! Backend unavailable.");
     } finally {
-        input.disabled = false;
-        input.focus();
+        if (gameActive) { input.disabled = false; input.focus(); }
     }
 }
 
-// Event listeners for Enter key + rules checkbox enable
-document.addEventListener("DOMContentLoaded", function() {
-    // Initial screen should be Welcome
+// ── Event Listeners ───────────────────────────────────────────
+document.addEventListener("DOMContentLoaded", () => {
     showScreen("welcomeScreen");
 
-    const teamIdInput = document.getElementById("teamId");
+    const teamIdInput  = document.getElementById("teamId");
     const passwordInput = document.getElementById("password");
-    const chatInput = document.getElementById("input");
+    const chatInput    = document.getElementById("input");
+    const rulesAgree   = document.getElementById("rulesAgree");
+    const startGameBtn = document.getElementById("startGameBtn");
 
-    if (teamIdInput) {
-        teamIdInput.addEventListener("keypress", function(e) {
-            if (e.key === "Enter") {
-                login();
-            }
-        });
-    }
-
-    if (passwordInput) {
-        passwordInput.addEventListener("keypress", function(e) {
-            if (e.key === "Enter") {
-                login();
-            }
-        });
-    }
+    if (teamIdInput)  teamIdInput.addEventListener("keypress",  e => { if (e.key === "Enter") login(); });
+    if (passwordInput) passwordInput.addEventListener("keypress", e => { if (e.key === "Enter") login(); });
 
     if (chatInput) {
-        chatInput.addEventListener("keypress", function(e) {
-            if (e.key === "Enter") {
-                sendMessage();
-            }
-        });
+        chatInput.addEventListener("keydown",  e => { initAudio(); if (e.key !== "Enter") playTypeBeep(); });
+        chatInput.addEventListener("keypress", e => { if (e.key === "Enter") sendMessage(); });
     }
 
-    // Rules checkbox -> enable Start Game button
-    const rulesAgree = document.getElementById("rulesAgree");
-    const startGameBtn = document.getElementById("startGameBtn");
     if (rulesAgree && startGameBtn) {
-        rulesAgree.addEventListener("change", function() {
+        rulesAgree.addEventListener("change", () => {
             startGameBtn.disabled = !rulesAgree.checked;
         });
     }
 
-    // Optional: Enter on welcome start
-    const welcomeBtn = document.getElementById("welcomeStartBtn");
-    if (welcomeBtn) {
-        document.addEventListener("keypress", function(e) {
-            if (e.key === "Enter" && !document.getElementById("welcomeScreen").classList.contains("hidden")) {
-                goToLogin();
-            }
-        });
-    }
+    // Enter on welcome screen
+    document.addEventListener("keypress", e => {
+        if (e.key === "Enter" && !document.getElementById("welcomeScreen").classList.contains("hidden")) {
+            goToLogin();
+        }
+    });
 });

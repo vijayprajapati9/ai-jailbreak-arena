@@ -1,128 +1,91 @@
-// MATRIX BG (2 COLOR PERFECT VERSION)
+/* ============================================================
+   AI JAILBREAK ARENA – Admin Panel Script
+   ============================================================ */
 
-const canvas = document.getElementById("matrixCanvas");
-const ctx = canvas.getContext("2d");
-
-function resizeCanvas(){
-    canvas.height = window.innerHeight;
-    canvas.width = window.innerWidth;
-}
-resizeCanvas();
-
+// ── Matrix Background ─────────────────────────────────────────
+const canvas  = document.getElementById("matrixCanvas");
+const ctx     = canvas.getContext("2d");
 const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@$#%&*";
 const fontSize = 16;
-let columns = Math.floor(canvas.width / fontSize);
-let drops = Array(columns).fill(1);
+const matrixColors = ["#15ff00", "#00ff88"];
+let columns = 0;
+let drops   = [];
 
-// 🎨 Two hacker colors
-const colors = ["#15ff00", "#00ff88"];
+function resizeCanvas() {
+    canvas.height = window.innerHeight;
+    canvas.width  = window.innerWidth;
+    columns = Math.floor(canvas.width / fontSize);
+    drops   = Array(columns).fill(1);
+}
 
-function drawMatrix(){
-
-    // fade effect (trail)
+function drawMatrix() {
     ctx.fillStyle = "rgba(0,0,0,0.06)";
-    ctx.fillRect(0,0,canvas.width,canvas.height);
-
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
     ctx.font = fontSize + "px monospace";
-
-    for(let i=0;i<drops.length;i++){
-
-        const text = letters[Math.floor(Math.random()*letters.length)];
-
-        // pick random color per character
-        const color = colors[Math.floor(Math.random()*colors.length)];
-        ctx.fillStyle = color;
-
-        ctx.fillText(text, i*fontSize, drops[i]*fontSize);
-
-        // reset drop randomly after reaching bottom
-        if(drops[i]*fontSize > canvas.height && Math.random() > 0.975){
-            drops[i] = 0;
-        }
-
+    for (let i = 0; i < drops.length; i++) {
+        ctx.fillStyle = matrixColors[Math.floor(Math.random() * matrixColors.length)];
+        ctx.fillText(letters[Math.floor(Math.random() * letters.length)], i * fontSize, drops[i] * fontSize);
+        if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) drops[i] = 0;
         drops[i]++;
     }
 }
 
+resizeCanvas();
 setInterval(drawMatrix, 35);
+window.addEventListener("resize", resizeCanvas);
 
-window.addEventListener("resize", ()=>{
-    resizeCanvas();
-    columns = Math.floor(canvas.width / fontSize);
-    drops = Array(columns).fill(1);
-});
+// ── Admin State ───────────────────────────────────────────────
+let ADMIN_PASSWORD = "";
 
-// Admin password (you can change this)
-const ADMIN_PASSWORD = "Kunj2004";
+// ── Login ─────────────────────────────────────────────────────
+async function adminLogin() {
+    ADMIN_PASSWORD = document.getElementById("adminPassword").value;
 
-function adminLogin() {
-    const password = document.getElementById("adminPassword").value;
-    
-    if (password === ADMIN_PASSWORD) {
-        document.getElementById("adminLogin").classList.add("hidden");
-        document.getElementById("adminDashboard").classList.remove("hidden");
-        loadAdminData();
-    } else {
-        alert("Invalid admin password!");
-    }
-}
-
-async function loadAdminData() {
-    await loadLeaderboard();
-    await loadTeams();
-}
-
-async function loadLeaderboard() {
     try {
-        const response = await fetch("/admin/leaderboard");
-        const leaderboard = await response.json();
-        
-        const tbody = document.getElementById("leaderboardBody");
-        tbody.innerHTML = "";
-        
-        if (leaderboard.length === 0) {
-            const row = tbody.insertRow();
-            row.innerHTML = '<td colspan="4" style="text-align: center;">No winners yet!</td>';
+        const res = await fetch("/admin/teams", {
+            headers: { "Authorization": `Bearer ${ADMIN_PASSWORD}` }
+        });
+
+        if (res.ok) {
+            document.getElementById("adminLogin").classList.add("hidden");
+            document.getElementById("adminDashboard").classList.remove("hidden");
+            loadTeams();
         } else {
-            leaderboard.forEach((entry, index) => {
-                const row = tbody.insertRow();
-                row.innerHTML = `
-                    <td>#${index + 1}</td>
-                    <td>${entry.teamId}</td>
-                    <td>${entry.attemptsUsed}</td>
-                    <td>${new Date(entry.timestamp).toLocaleString()}</td>
-                `;
-            });
+            alert("Invalid admin password!");
         }
-    } catch (error) {
-        console.error("Error loading leaderboard:", error);
+    } catch (e) {
+        alert("Server connection error!");
     }
 }
 
+function logout() {
+    document.getElementById("adminLogin").classList.remove("hidden");
+    document.getElementById("adminDashboard").classList.add("hidden");
+    document.getElementById("adminPassword").value = "";
+    ADMIN_PASSWORD = "";
+}
+
+// ── Teams ─────────────────────────────────────────────────────
 async function loadTeams() {
     try {
-        const response = await fetch("/admin/teams");
-        const teams = await response.json();
-        
-        const teamsGrid = document.getElementById("teamsList");
-        document.getElementById("totalTeams").innerText = teams.length;
-        
-        // Count teams with attempts < 15 (active games)
-        const activeGames = teams.filter(t => t.attempts < 15 && t.attempts > 0).length;
-        document.getElementById("activeGames").innerText = activeGames;
-        
-        teamsGrid.innerHTML = "";
-        
+        const res    = await fetch("/admin/teams", { headers: { "Authorization": `Bearer ${ADMIN_PASSWORD}` } });
+        const teams  = await res.json();
+        const grid   = document.getElementById("teamsList");
+
+        document.getElementById("totalTeams").innerText  = teams.length;
+        document.getElementById("activeGames").innerText = teams.filter(t => t.attempts < 15 && t.attempts > 0).length;
+
+        grid.innerHTML = "";
+
         teams.forEach(team => {
-            const teamCard = document.createElement("div");
-            teamCard.className = "team-card";
-            
-            const attemptsLeft = team.attempts;
-            const status = attemptsLeft === 15 ? "🟢 Fresh" : 
-                          attemptsLeft === 0 ? "🔴 No attempts" : 
-                          "🟡 In Progress";
-            
-            teamCard.innerHTML = `
+            const card = document.createElement("div");
+            card.className = "team-card";
+
+            const status = team.attempts === 15 ? "🟢 Fresh"
+                         : team.attempts === 0  ? "🔴 No Attempts"
+                         : "🟡 In Progress";
+
+            card.innerHTML = `
                 <div class="team-card-header">
                     <span class="team-id">${team.teamId}</span>
                     <div class="team-actions">
@@ -132,38 +95,33 @@ async function loadTeams() {
                 </div>
                 <div class="team-info">
                     <div>Status: ${status}</div>
-                    <div>Attempts Left: ${attemptsLeft}/15</div>
+                    <div>Attempts Left: ${team.attempts}/15</div>
                     <div>Created: ${new Date(team.createdAt).toLocaleDateString()}</div>
-                </div>
-            `;
-            
-            teamsGrid.appendChild(teamCard);
+                </div>`;
+
+            grid.appendChild(card);
         });
-    } catch (error) {
-        console.error("Error loading teams:", error);
+    } catch (err) {
+        console.error("Error loading teams:", err);
     }
 }
 
+// ── Create Team ───────────────────────────────────────────────
 async function createTeam() {
-    const teamId = document.getElementById("newTeamId").value;
-    const password = document.getElementById("newPassword").value;
-    
-    if (!teamId || !password) {
-        alert("Please enter both Team ID and Password");
-        return;
-    }
-    
-    const response = await fetch("/admin/create-team", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ teamId, password })
+    const teamId   = document.getElementById("newTeamId").value.trim();
+    const password = document.getElementById("newPassword").value.trim();
+
+    if (!teamId || !password) { alert("Please enter both Team ID and Password"); return; }
+
+    const res  = await fetch("/admin/create-team", {
+        method:  "POST",
+        headers: { "Content-Type": "application/json", "Authorization": `Bearer ${ADMIN_PASSWORD}` },
+        body:    JSON.stringify({ teamId, password })
     });
-    
-    const data = await response.json();
-    
+    const data = await res.json();
+
     if (data.success) {
-        alert("Team created successfully!");
-        document.getElementById("newTeamId").value = "";
+        document.getElementById("newTeamId").value  = "";
         document.getElementById("newPassword").value = "";
         loadTeams();
     } else {
@@ -171,59 +129,51 @@ async function createTeam() {
     }
 }
 
+// ── Delete Team ───────────────────────────────────────────────
 async function deleteTeam(teamId) {
-    if (confirm(`Are you sure you want to delete team ${teamId}?`)) {
-        const response = await fetch(`/admin/delete-team/${teamId}`, {
-            method: "DELETE"
-        });
-        
-        if (response.ok) {
-            alert("Team deleted successfully!");
-            loadTeams();
-            loadLeaderboard();
-        }
-    }
+    if (!confirm(`Delete team ${teamId}?`)) return;
+
+    const res = await fetch(`/admin/delete-team/${teamId}`, {
+        method:  "DELETE",
+        headers: { "Authorization": `Bearer ${ADMIN_PASSWORD}` }
+    });
+
+    if (res.ok) loadTeams();
 }
 
+// ── Reset Team ────────────────────────────────────────────────
 async function resetTeam(teamId) {
-    if (confirm(`Reset attempts for team ${teamId}?`)) {
-        const response = await fetch(`/admin/reset-team/${teamId}`, {
-            method: "POST"
-        });
-        
-        if (response.ok) {
-            alert("Team attempts reset to 15!");
-            loadTeams();
-        }
-    }
+    if (!confirm(`Reset attempts for ${teamId}?`)) return;
+
+    const res = await fetch(`/admin/reset-team/${teamId}`, {
+        method:  "POST",
+        headers: { "Authorization": `Bearer ${ADMIN_PASSWORD}` }
+    });
+
+    if (res.ok) loadTeams();
 }
 
+// ── Reset All Teams ───────────────────────────────────────────
 async function resetAllTeams() {
-    if (confirm("Are you sure you want to reset ALL teams? This will set all attempts to 15.")) {
-        const response = await fetch("/admin/teams");
-        const teams = await response.json();
-        
-        for (const team of teams) {
-            await fetch(`/admin/reset-team/${team.teamId}`, {
-                method: "POST"
-            });
-        }
-        
-        alert("All teams have been reset!");
-        loadTeams();
+    if (!confirm("Reset ALL teams to 15 attempts?")) return;
+
+    const res   = await fetch("/admin/teams", { headers: { "Authorization": `Bearer ${ADMIN_PASSWORD}` } });
+    const teams = await res.json();
+
+    for (const team of teams) {
+        await fetch(`/admin/reset-team/${team.teamId}`, {
+            method:  "POST",
+            headers: { "Authorization": `Bearer ${ADMIN_PASSWORD}` }
+        });
     }
+
+    alert("All teams reset!");
+    loadTeams();
 }
 
-function logout() {
-    document.getElementById("adminLogin").classList.remove("hidden");
-    document.getElementById("adminDashboard").classList.add("hidden");
-    document.getElementById("adminPassword").value = "";
-}
-
-// Auto-refresh data every 30 seconds
+// ── Auto-refresh every 30s ────────────────────────────────────
 setInterval(() => {
     if (!document.getElementById("adminDashboard").classList.contains("hidden")) {
         loadTeams();
-        loadLeaderboard();
     }
 }, 30000);
