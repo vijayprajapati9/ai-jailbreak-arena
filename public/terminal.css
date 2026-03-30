@@ -196,7 +196,9 @@
   gap: 10px !important;
   padding: 20px 24px !important;
   background: rgba(0, 10, 3, 0.78) !important;
-  border: 2px solid #15ff00 !important;
+  /* border: 2px solid #15ff00 !important; */
+  border: 2px solid #00ffea !important;
+
   border-radius: 22px !important;
   box-shadow: 0 0 28px rgba(21,255,0,0.2), inset 0 0 18px rgba(21,255,0,0.05) !important;
   font-family: 'Share Tech Mono', 'Courier New', monospace !important;
