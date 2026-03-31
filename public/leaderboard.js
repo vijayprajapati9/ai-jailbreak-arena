@@ -149,7 +149,7 @@ function formatTime(seconds) {
 }
 
 // Poll every 5 seconds for near real-time updates
-setInterval(loadLeaderboard, 5000);
+setInterval(loadLeaderboard, 3000);
 
 // Refresh immediately when tab is focused
 document.addEventListener("visibilitychange", () => {
