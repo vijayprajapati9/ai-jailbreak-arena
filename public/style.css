@@ -1,5 +1,19 @@
 @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Orbitron:wght@700;900&display=swap');
 
+html {
+  font-size: 16px;
+}
+
+@media (max-width: 768px) {
+  html {
+    font-size: 14px;
+  }
+}
+
+body {
+  overflow-x: hidden;
+}
+
 * { box-sizing: border-box; }
 
 body {
@@ -52,6 +66,14 @@ body, .screen, .admin-container {
   animation: panelFadeIn 0.4s ease-out;
 }
 
+/* Mobile */
+@media (max-width: 768px) {
+  .hacker-panel {
+    padding: 20px;
+    border-radius: 16px;
+  }
+}
+
 @keyframes panelFadeIn {
   0%  { opacity: 0; transform: translateY(20px) scale(0.97); }
   100%{ opacity: 1; transform: translateY(0)    scale(1);    }
@@ -92,6 +114,13 @@ body, .screen, .admin-container {
   text-align: center;
   line-height: 1.1;
   animation: titlePulse 2.5s infinite;
+}
+/* Mobile */
+@media (max-width: 768px) {
+  .glow-title {
+    font-size: 26px;
+    text-align: center;
+  }
 }
 .title-accent {
   color: #00ffea;

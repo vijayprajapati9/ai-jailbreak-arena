@@ -184,6 +184,12 @@ body {
 }
 
 /* ── PODIUM ─────────────────────────────────────── */
+.podium {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+}
+
 .podium-wrap {
   display: flex;
   align-items: flex-end;
@@ -303,8 +309,10 @@ body {
 
 .lb-row {
   display: grid;
-  grid-template-columns: 120px 1fr 180px 140px 200px;
+  /* grid-template-columns: 120px 1fr 180px 140px 200px; */
+    grid-template-columns: 60px 1fr 120px 120px 160px;
   align-items: center;
+  gap: 10px;
   padding: 20px 32px;
   transition: all 0.2s ease;
 }
@@ -475,4 +483,44 @@ body {
   .podium-block-2 { height: 95px; }
   .podium-block-3 { height: 70px; }
   .podium-team { font-size: 13px; }
+}
+
+/* Tablet */
+@media (max-width: 1024px) {
+  .lb-row {
+    grid-template-columns: 50px 1fr 100px 100px;
+  }
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+  .lb-row {
+    grid-template-columns: 1fr;
+    padding: 10px;
+    border-radius: 10px;
+    background: rgba(0,255,234,0.05);
+  }
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+  .podium {
+    flex-direction: column;
+    align-items: center;
+  }
+}
+
+button {
+  padding: 10px 16px;
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+  button {
+    width: 100%;
+  }
+}
+
+body {
+  overflow-x: hidden;
 }
