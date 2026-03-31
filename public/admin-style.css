@@ -1,11 +1,5 @@
-/* ============================================================
-   AI JAILBREAK ARENA – Admin Panel
-   Blue & Purple Neon Cyberpunk Theme
-   ============================================================ */
-
 @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Share+Tech+Mono&display=swap');
 
-/* ---- Base ---- */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 body {
@@ -15,7 +9,6 @@ body {
   min-height: 100vh;
 }
 
-/* ---- Matrix Canvas ---- */
 #matrixCanvas {
   position: fixed;
   top: 0; left: 0;
@@ -24,13 +17,9 @@ body {
   background: black;
 }
 
-/* content above canvas */
 body, .admin-container { position: relative; z-index: 1; }
 .hidden { display: none !important; }
 
-/* ============================================================
-   PAGE WRAPPER
-   ============================================================ */
 .admin-container {
   max-width: 960px;
   width: 95%;
@@ -42,9 +31,6 @@ body, .admin-container { position: relative; z-index: 1; }
   gap: 28px;
 }
 
-/* ============================================================
-   HEADER / TITLE
-   ============================================================ */
 .admin-header {
   text-align: center;
   display: flex;
@@ -81,9 +67,6 @@ body, .admin-container { position: relative; z-index: 1; }
   letter-spacing: 1px;
 }
 
-/* ============================================================
-   ADMIN PANEL CARD (main box)
-   ============================================================ */
 .admin-panel {
   width: 100%;
   background: rgba(0, 10, 5, 0.90);
@@ -97,9 +80,6 @@ body, .admin-container { position: relative; z-index: 1; }
   overflow: hidden;
 }
 
-/* ============================================================
-   LOGIN SECTION
-   ============================================================ */
 #adminLogin {
   padding: 52px 48px;
   display: flex;
@@ -122,17 +102,13 @@ body, .admin-container { position: relative; z-index: 1; }
   letter-spacing: 1px;
 }
 
-/* ============================================================
-   DASHBOARD
-   ============================================================ */
 #adminDashboard {
-  padding: 36px 36px;
+  padding: 36px;
   display: flex;
   flex-direction: column;
   gap: 28px;
 }
 
-/* ---- Section ---- */
 .admin-section {
   background: rgba(0,255,234,0.04);
   border: 1px solid rgba(0,255,234,0.3);
@@ -143,9 +119,7 @@ body, .admin-container { position: relative; z-index: 1; }
   gap: 18px;
   transition: box-shadow 0.3s;
 }
-.admin-section:hover {
-  box-shadow: 0 0 18px rgba(0,255,234,0.2);
-}
+.admin-section:hover { box-shadow: 0 0 18px rgba(0,255,234,0.2); }
 
 .admin-section h2 {
   font-family: 'Orbitron', monospace;
@@ -159,12 +133,8 @@ body, .admin-container { position: relative; z-index: 1; }
   gap: 10px;
 }
 
-/* ============================================================
-   STATS BAR
-   ============================================================ */
 .stats-box {
   display: flex;
-  gap: 0;
   padding: 20px 28px;
   background: rgba(0,255,234,0.05);
   border: 1px solid rgba(0,255,234,0.25);
@@ -191,9 +161,6 @@ body, .admin-container { position: relative; z-index: 1; }
   margin-top: 4px;
 }
 
-/* ============================================================
-   FORM INPUTS & BUTTONS
-   ============================================================ */
 .form-group {
   display: flex;
   gap: 14px;
@@ -223,7 +190,6 @@ input[type="password"]:focus {
 }
 input::placeholder { color: rgba(0,255,234,0.3); }
 
-/* Base button */
 button {
   padding: 12px 28px;
   background: transparent;
@@ -246,7 +212,6 @@ button:hover {
   transform: scale(1.04);
 }
 
-/* Primary (create/login) button */
 .btn-primary {
   border-color: #00ffea;
   color: #00ffea;
@@ -258,7 +223,6 @@ button:hover {
   box-shadow: 0 0 28px #00ffea;
 }
 
-/* Danger button */
 .danger-btn {
   border-color: #ef4444;
   color: #ef4444;
@@ -271,7 +235,6 @@ button:hover {
   box-shadow: 0 0 22px #ef4444;
 }
 
-/* Logout button */
 .logout-btn {
   border-color: rgba(0,255,234,0.4);
   color: rgba(0,255,234,0.6);
@@ -284,9 +247,6 @@ button:hover {
   transform: none;
 }
 
-/* ============================================================
-   TEAM CARDS GRID
-   ============================================================ */
 .teams-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
@@ -331,10 +291,7 @@ button:hover {
   max-width: 140px;
 }
 
-.team-actions {
-  display: flex;
-  gap: 8px;
-}
+.team-actions { display: flex; gap: 8px; }
 .team-actions button {
   padding: 5px 10px;
   font-size: 16px;
@@ -350,9 +307,6 @@ button:hover {
   gap: 5px;
 }
 
-/* ============================================================
-   SECTION BOTTOM ACTIONS
-   ============================================================ */
 .section-actions {
   display: flex;
   gap: 14px;
@@ -361,17 +315,11 @@ button:hover {
   margin-top: 4px;
 }
 
-/* ============================================================
-   SCROLLBAR
-   ============================================================ */
 ::-webkit-scrollbar { width: 8px; }
 ::-webkit-scrollbar-track { background: #000; }
 ::-webkit-scrollbar-thumb { background: #ff00ff; border-radius: 4px; }
 ::-webkit-scrollbar-thumb:hover { background: #00ffea; }
 
-/* ============================================================
-   ANIMATIONS
-   ============================================================ */
 @keyframes titlePulse {
   0%, 100%{ opacity: 1; }
   50%     { opacity: 0.85; }
@@ -381,9 +329,6 @@ button:hover {
   50%     { box-shadow: 0 0 18px rgba(0,255,234,0.7); }
 }
 
-/* ============================================================
-   RESPONSIVE
-   ============================================================ */
 @media (max-width: 640px) {
   #adminLogin, #adminDashboard { padding: 28px 20px; }
   .form-group { flex-direction: column; }

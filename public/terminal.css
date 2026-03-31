@@ -1,11 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap');
 
-/* ============================================================
-   AI JAILBREAK ARENA – Terminal / Game Screen CSS
-   Rounded neon-bordered hacker theme
-   ============================================================ */
-
-/* ---- CRT scanlines overlay ---- */
 .scanlines {
   position: fixed;
   top: 0; left: 0;
@@ -18,9 +12,6 @@
   z-index: 9999;
 }
 
-/* ============================================================
-   GAME SCREEN LAYOUT
-   ============================================================ */
 #gameScreen {
   display: flex;
   flex-direction: column;
@@ -33,9 +24,6 @@
   overflow: hidden;
 }
 
-/* ============================================================
-   HUD TOP BAR
-   ============================================================ */
 .hacker-top {
   display: flex !important;
   justify-content: space-between !important;
@@ -61,7 +49,6 @@
   letter-spacing: 1px;
 }
 
-/* Stability meter */
 .meter-bg {
   width: 140px;
   height: 10px;
@@ -71,6 +58,7 @@
   margin-top: 4px;
   overflow: hidden;
 }
+
 .meter-fill {
   height: 100%;
   width: 100%;
@@ -80,12 +68,8 @@
   box-shadow: 0 0 8px #15ff00;
 }
 
-/* ============================================================
-   ATTEMPT PELLETS – Hacker Node System
-   ============================================================ */
 .attempts-visual { display: flex; gap: 5px; margin-top: 4px; align-items: center; }
 
-/* Base pellet – all active nodes */
 .attempt-box {
   width: 12px; height: 12px;
   border-radius: 3px;
@@ -94,42 +78,36 @@
   cursor: default;
 }
 
-/* Tier 5: Critical last 3 (positions 1-3) — BREACH RED — last surviving nodes */
 .attempt-box:nth-child(-n+3):not(.used) {
   background: linear-gradient(135deg, #ff0055, #ff0022);
   box-shadow: 0 0 8px #ff0055, 0 0 18px rgba(255,0,85,0.7);
   animation: pelletPulse-red 0.6s ease-in-out infinite;
 }
 
-/* Tier 4: Low (positions 4-6) — WARNING ORANGE */
 .attempt-box:nth-child(n+4):nth-child(-n+6):not(.used) {
   background: linear-gradient(135deg, #ff6a00, #ff3d00);
   box-shadow: 0 0 6px #ff6a00, 0 0 14px rgba(255,106,0,0.5);
   animation: pelletPulse-orange 1.2s ease-in-out infinite;
 }
 
-/* Tier 3: Mid (positions 7-9) — ELECTRIC YELLOW */
 .attempt-box:nth-child(n+7):nth-child(-n+9):not(.used) {
   background: linear-gradient(135deg, #ffe000, #ffaa00);
   box-shadow: 0 0 6px #ffe000, 0 0 14px rgba(255,224,0,0.5);
   animation: pelletPulse-yellow 1.5s ease-in-out infinite;
 }
 
-/* Tier 2: (positions 10-12) — CYBER CYAN */
 .attempt-box:nth-child(n+10):nth-child(-n+12):not(.used) {
   background: linear-gradient(135deg, #00ffea, #00cfff);
   box-shadow: 0 0 6px #00ffea, 0 0 14px rgba(0,255,234,0.5);
   animation: pelletPulse-cyan 1.8s ease-in-out infinite;
 }
 
-/* Tier 1: Full health (positions 13-15) — MATRIX GREEN — always filled when healthy */
 .attempt-box:nth-child(n+13):not(.used) {
   background: linear-gradient(135deg, #00ff41, #15ff00);
   box-shadow: 0 0 6px #00ff41, 0 0 14px rgba(0,255,65,0.5);
   animation: pelletPulse-green 1.8s ease-in-out infinite;
 }
 
-/* Used / burned slot – dead node */
 .attempt-box.used {
   background: rgba(255, 0, 0, 0.07);
   box-shadow: none;
@@ -138,7 +116,7 @@
   animation: none;
   opacity: 0.45;
 }
-/* Cracked X mark on used pellets via pseudo-element */
+
 .attempt-box.used::after {
   content: '×';
   position: absolute;
@@ -149,7 +127,6 @@
   line-height: 1;
 }
 
-/* Pulse animations per tier */
 @keyframes pelletPulse-green {
   0%, 100% { box-shadow: 0 0 5px #00ff41, 0 0 10px rgba(0,255,65,0.4); }
   50%       { box-shadow: 0 0 10px #00ff41, 0 0 22px rgba(0,255,65,0.8); transform: scale(1.12); }
@@ -171,7 +148,6 @@
   50%       { box-shadow: 0 0 14px #ff0055, 0 0 30px rgba(255,0,85,0.9); transform: scale(1.2); }
 }
 
-/* Critical flicker */
 .critical-stability {
   animation: criticalFlicker 0.2s infinite;
   background: linear-gradient(90deg, #ff2200, #ff5500) !important;
@@ -183,9 +159,6 @@
   100%{ opacity: 1; }
 }
 
-/* ============================================================
-   CHAT TERMINAL BOX
-   ============================================================ */
 .hacker-terminal {
   width: 95% !important;
   flex: 1;
@@ -196,9 +169,7 @@
   gap: 10px !important;
   padding: 20px 24px !important;
   background: rgba(0, 10, 3, 0.78) !important;
-  /* border: 2px solid #15ff00 !important; */
   border: 2px solid #00ffea !important;
-
   border-radius: 22px !important;
   box-shadow: 0 0 28px rgba(21,255,0,0.2), inset 0 0 18px rgba(21,255,0,0.05) !important;
   font-family: 'Share Tech Mono', 'Courier New', monospace !important;
@@ -206,9 +177,6 @@
   scroll-behavior: smooth;
 }
 
-/* ============================================================
-   MESSAGES
-   ============================================================ */
 .message {
   display: flex !important;
   width: 100% !important;
@@ -219,7 +187,6 @@
 .message-user { justify-content: flex-end !important; }
 .message-ai   { justify-content: flex-start !important; }
 
-/* Chat bubble card */
 .chat-card {
   max-width: 78%;
   padding: 16px 20px;
@@ -243,7 +210,6 @@
   border-bottom-left-radius: 6px;
 }
 
-/* Sender header row inside bubble */
 .chat-header {
   display: inline-flex;
   align-items: center;
@@ -262,7 +228,6 @@
   box-shadow: 0 0 8px rgba(0,255,234,0.15);
 }
 
-/* Avatar circle */
 .avatar {
   font-size: 22px;
   width: 38px; height: 38px;
@@ -274,16 +239,13 @@
 .message-user .avatar { border: 2px solid #00ffea; box-shadow: 0 0 8px #00ffea; }
 .message-ai .avatar   { border: 2px solid #15ff00; box-shadow: 0 0 8px #15ff00; }
 
-/* Sender name */
 .sender-name { font-weight: bold; font-size: 14px; letter-spacing: 1px; }
 .message-user .sender-name { color: #00ffea; text-shadow: 0 0 5px #00ffea; }
 .message-ai .sender-name   { color: #15ff00; text-shadow: 0 0 5px #15ff00; }
 
-/* Timestamp */
 .timestamp { font-size: 10px; color: rgba(255,255,255,0.35); margin-left: auto; }
 .message-user .timestamp { margin-left: 0; margin-right: auto; }
 
-/* Message text */
 .msg-text {
   font-family: 'Share Tech Mono', 'Courier New', monospace !important;
   font-size: 1rem !important;
@@ -294,9 +256,6 @@
 .message-user .msg-text { color: #00ffea !important; text-shadow: 0 0 4px #00ffea !important; text-align: right; }
 .message-ai .msg-text   { color: #15ff00 !important; text-shadow: 0 0 4px #15ff00 !important; }
 
-/* ============================================================
-   INPUT BAR
-   ============================================================ */
 .terminal-input-container {
   display: flex !important;
   align-items: center !important;
@@ -344,7 +303,6 @@
   color: rgba(0,255,234,0.3);
 }
 
-/* SEND button – pill shape */
 .terminal-input-container button {
   border-radius: 30px !important;
   border: 2px solid #ff00ff !important;
@@ -368,9 +326,6 @@
   box-shadow: 0 0 22px #ff00ff !important;
 }
 
-/* ============================================================
-   LOCKOUT OVERLAY
-   ============================================================ */
 .system-lockout {
   position: fixed;
   top: 0; left: 0;
@@ -390,79 +345,235 @@
 }
 .system-lockout-alert { animation: pulseLockout 1s infinite alternate; }
 
-/* ============================================================
-   WIN POPUP
-   ============================================================ */
-.win-popup-overlay {
+.win-overlay {
   position: fixed;
   top: 0; left: 0;
   width: 100vw; height: 100vh;
-  background: rgba(0, 0, 0, 0.88);
-  display: flex !important;
+  z-index: 10001;
+  display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 10000;
-  backdrop-filter: blur(8px);
+  background: rgba(0, 10, 3, 0.97);
+  overflow: hidden;
 }
-.win-popup-overlay.hidden { display: none !important; }
+.win-overlay.hidden { display: none !important; }
 
-.win-popup-card {
-  background: rgba(0, 18, 5, 0.95);
+#winMatrix {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  z-index: 0;
+  opacity: 0.15;
+}
+
+.win-scanlines {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: linear-gradient(rgba(0,10,20,0) 50%, rgba(0,0,0,0.25) 50%);
+  background-size: 100% 3px;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.win-flash { display: none; }
+
+.win-card {
+  position: relative;
+  z-index: 10;
+  background: rgba(0, 10, 3, 0.92);
   border: 2px solid #15ff00;
-  box-shadow: 0 0 40px #15ff00, 0 0 100px rgba(21,255,0,0.2), inset 0 0 30px rgba(21,255,0,0.1);
-  padding: 48px 52px;
+  border-radius: 24px;
+  padding: 40px 52px;
+  max-width: 700px;
+  width: 92vw;
   text-align: center;
-  border-radius: 28px;
-  animation: popupScale 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
   font-family: 'Share Tech Mono', 'Courier New', monospace;
-  color: #15ff00;
-  min-width: 380px;
+  box-shadow:
+    0 0 28px rgba(21, 255, 0, 0.3),
+    inset 0 0 18px rgba(21, 255, 0, 0.06);
+  animation: winCardEntrance 0.5s ease-out both;
+  backdrop-filter: blur(4px);
+}
+@keyframes winCardEntrance {
+  0%  { transform: translateY(30px); opacity: 0; }
+  100%{ transform: translateY(0);    opacity: 1; }
 }
 
-.glow-title-green {
-  font-size: 46px;
-  color: #15ff00;
-  text-shadow: 0 0 12px #15ff00, 0 0 25px #15ff00, 0 0 55px #15ff00;
-  margin: 0 0 24px 0;
-  animation: pulseGreen 1.5s infinite;
-  letter-spacing: 2px;
+.win-top-banner {
+  background: linear-gradient(90deg, #001800, #003300, #001800);
+  border-bottom: 1px solid rgba(21, 255, 0, 0.4);
+  padding: 8px 0;
+  margin: -40px -52px 28px;
+  border-radius: 22px 22px 0 0;
+  overflow: hidden;
 }
 
-.win-stats p {
-  font-size: 18px;
-  margin: 14px 0;
+.win-banner-txt {
+  font-size: 14px;
+  font-weight: bold;
+  letter-spacing: 6px;
+  color: #15ff00;
+  text-shadow: 0 0 8px rgba(21, 255, 0, 0.6);
+  display: inline-block;
+}
+
+.win-skull-ring {
+  width: 90px; height: 90px;
+  border-radius: 50%;
+  border: 3px solid #15ff00;
+  box-shadow: 0 0 18px rgba(21, 255, 0, 0.5), inset 0 0 10px rgba(21, 255, 0, 0.08);
+  display: flex; align-items: center; justify-content: center;
+  margin: 0 auto 20px;
+  transition: box-shadow 0.4s ease;
+}
+.win-skull-inner { font-size: 42px; }
+
+.win-heading {
+  font-size: clamp(32px, 5vw, 52px);
+  letter-spacing: 4px;
+  color: #15ff00;
+  text-shadow: 0 0 10px rgba(21, 255, 0, 0.9), 0 0 30px rgba(21, 255, 0, 0.4);
+  margin: 0 0 10px;
+  display: inline-block;
+}
+
+.win-subline {
+  color: #ff00ff;
+  font-size: 13px;
+  letter-spacing: 3px;
+  text-shadow: 0 0 6px rgba(255, 0, 255, 0.5);
+  margin-bottom: 22px;
+  opacity: 0.9;
+}
+
+.win-divider {
+  width: 100%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, #15ff00, #00ffea, transparent);
+  margin: 0 0 24px;
+  opacity: 0.65;
+}
+
+.win-stats-grid {
   display: flex;
-  justify-content: space-between;
-  border-bottom: 1px dashed rgba(21,255,0,0.4);
-  padding-bottom: 8px;
-  gap: 20px;
+  gap: 16px;
+  justify-content: center;
+  margin-bottom: 26px;
+  flex-wrap: wrap;
 }
-.win-stats span { font-weight: bold; color: #fff; text-shadow: 0 0 5px #fff; }
-
-.win-popup-card button {
-  margin-top: 30px;
-  padding: 14px 36px;
-  font-size: 16px;
-  background: transparent;
-  color: #15ff00;
-  border: 2px solid #15ff00;
-  border-radius: 30px;
-  cursor: pointer;
-  transition: all 0.3s;
-  font-family: inherit;
+.win-stat-card {
+  background: rgba(21, 255, 0, 0.05);
+  border: 1px solid rgba(21, 255, 0, 0.3);
+  border-radius: 14px;
+  padding: 14px 20px;
+  min-width: 110px;
+  flex: 1;
+  transition: background 0.3s, border-color 0.3s;
+}
+.win-stat-card:hover {
+  background: rgba(21, 255, 0, 0.1);
+  border-color: #15ff00;
+}
+.win-stat-label {
+  font-size: 10px;
+  letter-spacing: 2px;
+  color: rgba(21, 255, 0, 0.6);
+  margin-bottom: 8px;
+}
+.win-stat-value {
+  font-size: 22px;
+  color: #fff;
+  text-shadow: 0 0 6px rgba(21, 255, 0, 0.5);
   font-weight: bold;
   letter-spacing: 1px;
-  box-shadow: 0 0 12px rgba(21,255,0,0.3);
-}
-.win-popup-card button:hover {
-  background: #15ff00;
-  color: #000;
-  box-shadow: 0 0 25px #15ff00;
 }
 
-/* ============================================================
-   ANIMATIONS
-   ============================================================ */
+.win-key-section { margin-bottom: 28px; }
+
+.win-key-label {
+  font-size: 12px;
+  letter-spacing: 2px;
+  color: #00ffea;
+  text-shadow: 0 0 6px rgba(0, 255, 234, 0.4);
+  margin-bottom: 12px;
+}
+
+.win-key-box {
+  background: rgba(0, 15, 5, 0.75);
+  border: 2px solid #00ffea;
+  border-radius: 14px;
+  padding: 18px 24px;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 0 20px rgba(0, 255, 234, 0.12), inset 0 0 12px rgba(0, 255, 234, 0.04);
+}
+.win-key-box::before,
+.win-key-box::after {
+  content: '';
+  position: absolute;
+  width: 20px; height: 20px;
+  border-color: #ff00ff;
+  border-style: solid;
+  opacity: 0.6;
+}
+.win-key-box::before {
+  top: 6px; left: 6px;
+  border-width: 2px 0 0 2px;
+}
+.win-key-box::after {
+  bottom: 6px; right: 6px;
+  border-width: 0 2px 2px 0;
+}
+
+.win-key-scramble {
+  font-size: 22px;
+  color: #00ffea;
+  text-shadow: 0 0 8px rgba(0, 255, 234, 0.5);
+  letter-spacing: 4px;
+  font-weight: bold;
+  opacity: 0.85;
+}
+
+.win-key-value {
+  font-size: 30px;
+  font-weight: bold;
+  color: #00ffea;
+  text-shadow: 0 0 12px rgba(0, 255, 234, 0.7), 0 0 30px rgba(0, 255, 234, 0.3);
+  letter-spacing: 6px;
+}
+
+.win-key-tip {
+  margin-top: 10px;
+  font-size: 10px;
+  color: rgba(255, 255, 255, 0.3);
+  letter-spacing: 1px;
+}
+
+.win-exit-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 38px;
+  background: transparent;
+  color: #ff00ff;
+  border: 2px solid #ff00ff;
+  border-radius: 50px;
+  font-family: 'Share Tech Mono', 'Courier New', monospace;
+  font-size: 15px;
+  letter-spacing: 2px;
+  cursor: pointer;
+  transition: background 0.25s, color 0.25s, box-shadow 0.25s;
+  box-shadow: 0 0 12px rgba(255, 0, 255, 0.2);
+  text-shadow: 0 0 5px rgba(255, 0, 255, 0.5);
+}
+.win-exit-btn:hover {
+  background: #ff00ff;
+  color: #000;
+  box-shadow: 0 0 26px rgba(255, 0, 255, 0.5);
+  text-shadow: none;
+}
+
 @keyframes hackerReveal {
   0%  { opacity: 0; transform: translateY(8px); }
   100%{ opacity: 1; transform: translateY(0); }
@@ -475,12 +586,4 @@
 @keyframes pulseLockout {
   0%  { transform: scale(1); opacity: 0.8; }
   100%{ transform: scale(1.08); opacity: 1; text-shadow: 0 0 60px red; }
-}
-@keyframes popupScale {
-  0%  { transform: scale(0.5); opacity: 0; }
-  100%{ transform: scale(1); opacity: 1; }
-}
-@keyframes pulseGreen {
-  0%, 100%{ text-shadow: 0 0 12px #15ff00; }
-  50%     { text-shadow: 0 0 35px #15ff00; }
 }

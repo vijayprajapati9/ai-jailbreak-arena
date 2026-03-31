@@ -1,6 +1,5 @@
-const { teams } = require("../models/collections");
+const { teams, leaderboard } = require("../models/collections");
 
-// POST /admin/create-team
 const createTeam = async (req, res) => {
     try {
         const { teamId, password } = req.body;
@@ -27,7 +26,6 @@ const createTeam = async (req, res) => {
     }
 };
 
-// GET /admin/teams
 const getAllTeams = async (req, res) => {
     try {
         const allTeams = await teams().find({}, { projection: { _id: 0 } }).toArray();
@@ -38,7 +36,6 @@ const getAllTeams = async (req, res) => {
     }
 };
 
-// DELETE /admin/delete-team/:teamId
 const deleteTeam = async (req, res) => {
     try {
         const { teamId } = req.params;
@@ -51,7 +48,6 @@ const deleteTeam = async (req, res) => {
     }
 };
 
-// POST /admin/reset-team/:teamId
 const resetTeam = async (req, res) => {
     try {
         const { teamId } = req.params;

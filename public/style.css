@@ -1,10 +1,5 @@
-/* ==========================================
-   AI JAILBREAK ARENA – Core Styles
-   ========================================== */
-
 @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Orbitron:wght@700;900&display=swap');
 
-/* --- Base --- */
 * { box-sizing: border-box; }
 
 body {
@@ -16,7 +11,6 @@ body {
 
 .hidden { display: none !important; }
 
-/* --- Matrix Canvas --- */
 #matrixCanvas {
   position: fixed;
   top: 0; left: 0;
@@ -25,13 +19,11 @@ body {
   background: black;
 }
 
-/* make content above canvas */
 body, .screen, .admin-container {
   position: relative;
   z-index: 1;
 }
 
-/* --- Screen layout --- */
 .screen {
   min-height: 100vh;
   display: flex;
@@ -41,9 +33,6 @@ body, .screen, .admin-container {
   padding: 20px;
 }
 
-/* ==========================================
-   HACKER PANEL – reusable panel component
-   ========================================== */
 .hacker-panel {
   background: rgba(0, 12, 8, 0.88);
   border: 2px solid #00ffea;
@@ -68,7 +57,6 @@ body, .screen, .admin-container {
   100%{ opacity: 1; transform: translateY(0)    scale(1);    }
 }
 
-/* Panel badge – small top status indicator */
 .panel-badge {
   font-size: 11px;
   color: #00ffea;
@@ -86,7 +74,6 @@ body, .screen, .admin-container {
   50%       { box-shadow: 0 0 16px rgba(0, 255, 234, 0.7); }
 }
 
-/* Panel sub-text */
 .panel-sub {
   font-size: 13px;
   color: rgba(0, 255, 234, 0.65);
@@ -95,9 +82,6 @@ body, .screen, .admin-container {
   line-height: 1.6;
 }
 
-/* ==========================================
-   GLOW TITLE
-   ========================================== */
 .glow-title {
   font-family: 'Orbitron', monospace;
   font-size: 52px;
@@ -118,9 +102,6 @@ body, .screen, .admin-container {
   50%     { opacity: 0.85; }
 }
 
-/* ==========================================
-   WELCOME SCREEN
-   ========================================== */
 .welcome-panel { max-width: 620px; }
 
 .welcome-sub {
@@ -136,7 +117,6 @@ body, .screen, .admin-container {
   font-weight: bold;
 }
 
-/* Welcome stats bar */
 .welcome-stats {
   display: flex;
   align-items: center;
@@ -171,9 +151,6 @@ body, .screen, .admin-container {
   font-size: 28px;
 }
 
-/* ==========================================
-   NEON BUTTONS
-   ========================================== */
 .neon-btn {
   padding: 14px 40px;
   background: transparent;
@@ -216,9 +193,6 @@ body, .screen, .admin-container {
   box-shadow: 0 0 25px #00ffea;
 }
 
-/* ==========================================
-   NEON FORM (Login)
-   ========================================== */
 .neon-form {
   width: 100%;
   display: flex;
@@ -261,7 +235,6 @@ body, .screen, .admin-container {
 
 input:disabled { opacity: 0.5; cursor: not-allowed; }
 
-/* Global button fallback */
 button {
   padding: 12px 25px;
   background: transparent;
@@ -286,9 +259,6 @@ button:disabled {
   box-shadow: none;
 }
 
-/* ==========================================
-   RULES SCREEN
-   ========================================== */
 .rules-panel { max-width: 640px; }
 
 .rules-list {
@@ -355,9 +325,6 @@ button:disabled {
   width: 100%;
 }
 
-/* ==========================================
-   LINKS & SCROLLBAR
-   ========================================== */
 a { text-decoration: none; transition: 0.3s; }
 a:hover { text-shadow: 0 0 10px #00ffea; }
 

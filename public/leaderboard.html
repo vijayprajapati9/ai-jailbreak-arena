@@ -12,14 +12,12 @@
 
   <div class="lb-page">
 
-    <!-- HEADER -->
     <div class="lb-header">
       <div class="lb-badge">[ CLASSIFIED BREACH LOG ]</div>
       <h1 class="lb-title">🏆 LEADERBOARD</h1>
       <p class="lb-subtitle">Top agents who successfully extracted the secret code</p>
     </div>
 
-    <!-- STATS STRIP -->
     <div class="lb-stats-strip">
       <div class="lb-stat">
         <div class="lb-stat-val" id="totalWinners">—</div>
@@ -37,9 +35,49 @@
       </div>
     </div>
 
-    <!-- LEADERBOARD CARD -->
+    <!-- LEADERBOARD CARD (podium + table inside) -->
     <div class="lb-card">
-      <!-- Header row -->
+
+      <!-- PODIUM (hidden until data loads) -->
+      <div id="podiumSection" class="hidden">
+        <div class="podium-wrap">
+
+          <!-- 2nd place -->
+          <div class="podium-slot podium-2" id="podium2">
+            <div class="podium-medal">🥈</div>
+            <div class="podium-team" id="podium2Team">—</div>
+            <div class="podium-meta" id="podium2Meta"></div>
+            <div class="podium-block podium-block-2">
+              <span class="podium-rank">#2</span>
+            </div>
+          </div>
+
+          <!-- 1st place -->
+          <div class="podium-slot podium-1" id="podium1">
+            <div class="podium-crown">👑</div>
+            <div class="podium-medal">🥇</div>
+            <div class="podium-team" id="podium1Team">—</div>
+            <div class="podium-meta" id="podium1Meta"></div>
+            <div class="podium-block podium-block-1">
+              <span class="podium-rank">#1</span>
+            </div>
+          </div>
+
+          <!-- 3rd place -->
+          <div class="podium-slot podium-3" id="podium3">
+            <div class="podium-medal">🥉</div>
+            <div class="podium-team" id="podium3Team">—</div>
+            <div class="podium-meta" id="podium3Meta"></div>
+            <div class="podium-block podium-block-3">
+              <span class="podium-rank">#3</span>
+            </div>
+          </div>
+
+        </div>
+        <div class="podium-stage-floor"></div>
+      </div>
+
+      <!-- TABLE HEADER -->
       <div class="lb-row lb-row-header">
         <div class="lb-col lb-col-rank">RANK</div>
         <div class="lb-col lb-col-team">AGENT</div>
@@ -48,13 +86,13 @@
         <div class="lb-col lb-col-date">TIMESTAMP</div>
       </div>
 
-      <!-- Body -->
+      <!-- TABLE BODY -->
       <div id="leaderboardBody" class="lb-body">
         <div class="lb-loading">⟳ ACCESSING CLASSIFIED DATA…</div>
       </div>
+
     </div>
 
-    <!-- ACTIONS -->
     <div class="lb-actions">
       <button class="lb-btn lb-btn-cyan" onclick="refreshLeaderboard()">⟳ REFRESH</button>
       <button class="lb-btn lb-btn-magenta" onclick="goBack()">← BACK TO ARENA</button>

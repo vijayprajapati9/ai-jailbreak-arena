@@ -1,8 +1,3 @@
-/* ============================================================
-   AI JAILBREAK ARENA – Admin Panel Script
-   ============================================================ */
-
-// ── Matrix Background ─────────────────────────────────────────
 const canvas  = document.getElementById("matrixCanvas");
 const ctx     = canvas.getContext("2d");
 const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@$#%&*";
@@ -34,18 +29,14 @@ resizeCanvas();
 setInterval(drawMatrix, 35);
 window.addEventListener("resize", resizeCanvas);
 
-// ── Admin State ───────────────────────────────────────────────
 let ADMIN_PASSWORD = "";
 
-// ── Login ─────────────────────────────────────────────────────
 async function adminLogin() {
     ADMIN_PASSWORD = document.getElementById("adminPassword").value;
-
     try {
         const res = await fetch("/admin/teams", {
             headers: { "Authorization": `Bearer ${ADMIN_PASSWORD}` }
         });
-
         if (res.ok) {
             document.getElementById("adminLogin").classList.add("hidden");
             document.getElementById("adminDashboard").classList.remove("hidden");
@@ -65,26 +56,20 @@ function logout() {
     ADMIN_PASSWORD = "";
 }
 
-// ── Teams ─────────────────────────────────────────────────────
 async function loadTeams() {
     try {
-        const res    = await fetch("/admin/teams", { headers: { "Authorization": `Bearer ${ADMIN_PASSWORD}` } });
-        const teams  = await res.json();
-        const grid   = document.getElementById("teamsList");
-
+        const res   = await fetch("/admin/teams", { headers: { "Authorization": `Bearer ${ADMIN_PASSWORD}` } });
+        const teams = await res.json();
+        const grid  = document.getElementById("teamsList");
         document.getElementById("totalTeams").innerText  = teams.length;
         document.getElementById("activeGames").innerText = teams.filter(t => t.attempts < 15 && t.attempts > 0).length;
-
         grid.innerHTML = "";
-
         teams.forEach(team => {
             const card = document.createElement("div");
             card.className = "team-card";
-
             const status = team.attempts === 15 ? "🟢 Fresh"
                          : team.attempts === 0  ? "🔴 No Attempts"
                          : "🟡 In Progress";
-
             card.innerHTML = `
                 <div class="team-card-header">
                     <span class="team-id">${team.teamId}</span>
@@ -98,7 +83,6 @@ async function loadTeams() {
                     <div>Attempts Left: ${team.attempts}/15</div>
                     <div>Created: ${new Date(team.createdAt).toLocaleDateString()}</div>
                 </div>`;
-
             grid.appendChild(card);
         });
     } catch (err) {
@@ -106,20 +90,16 @@ async function loadTeams() {
     }
 }
 
-// ── Create Team ───────────────────────────────────────────────
 async function createTeam() {
     const teamId   = document.getElementById("newTeamId").value.trim();
     const password = document.getElementById("newPassword").value.trim();
-
     if (!teamId || !password) { alert("Please enter both Team ID and Password"); return; }
-
     const res  = await fetch("/admin/create-team", {
         method:  "POST",
         headers: { "Content-Type": "application/json", "Authorization": `Bearer ${ADMIN_PASSWORD}` },
         body:    JSON.stringify({ teamId, password })
     });
     const data = await res.json();
-
     if (data.success) {
         document.getElementById("newTeamId").value  = "";
         document.getElementById("newPassword").value = "";
@@ -129,51 +109,38 @@ async function createTeam() {
     }
 }
 
-// ── Delete Team ───────────────────────────────────────────────
 async function deleteTeam(teamId) {
     if (!confirm(`Delete team ${teamId}?`)) return;
-
     const res = await fetch(`/admin/delete-team/${teamId}`, {
         method:  "DELETE",
         headers: { "Authorization": `Bearer ${ADMIN_PASSWORD}` }
     });
-
     if (res.ok) loadTeams();
 }
 
-// ── Reset Team ────────────────────────────────────────────────
 async function resetTeam(teamId) {
     if (!confirm(`Reset attempts for ${teamId}?`)) return;
-
     const res = await fetch(`/admin/reset-team/${teamId}`, {
         method:  "POST",
         headers: { "Authorization": `Bearer ${ADMIN_PASSWORD}` }
     });
-
     if (res.ok) loadTeams();
 }
 
-// ── Reset All Teams ───────────────────────────────────────────
 async function resetAllTeams() {
     if (!confirm("Reset ALL teams to 15 attempts?")) return;
-
     const res   = await fetch("/admin/teams", { headers: { "Authorization": `Bearer ${ADMIN_PASSWORD}` } });
     const teams = await res.json();
-
     for (const team of teams) {
         await fetch(`/admin/reset-team/${team.teamId}`, {
             method:  "POST",
             headers: { "Authorization": `Bearer ${ADMIN_PASSWORD}` }
         });
     }
-
     alert("All teams reset!");
     loadTeams();
 }
 
-// ── Auto-refresh every 30s ────────────────────────────────────
 setInterval(() => {
-    if (!document.getElementById("adminDashboard").classList.contains("hidden")) {
-        loadTeams();
-    }
+    if (!document.getElementById("adminDashboard").classList.contains("hidden")) loadTeams();
 }, 30000);

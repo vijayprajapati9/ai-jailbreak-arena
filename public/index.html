@@ -132,16 +132,71 @@
     </div>
   </div>
 
-  <!-- 4) Win Popup -->
-  <div id="winPopup" class="win-popup-overlay hidden">
-    <div class="win-popup-card">
-      <h2 class="glow-title-green">ACCESS GRANTED</h2>
-      <div class="win-stats">
-        <p>TEAM: <span id="winTeamName"></span></p>
-        <p>ATTEMPTS USED: <span id="winAttemptsUsed"></span></p>
-        <p>TIME TAKEN: <span id="winTimeTaken"></span></p>
+  <!-- 4) WIN OVERLAY – Full-Screen Hacker Victory -->
+  <div id="winPopup" class="win-overlay hidden">
+
+    <!-- Full-screen matrix canvas inside popup -->
+    <canvas id="winMatrix"></canvas>
+
+    <!-- Scanline flicker -->
+    <div class="win-scanlines"></div>
+
+    <!-- Red/green flash burst on entry -->
+    <div id="winFlash" class="win-flash"></div>
+
+    <!-- Main card -->
+    <div class="win-card" id="winCard">
+
+      <!-- Glitch top banner -->
+      <div class="win-top-banner">
+        <span class="win-banner-txt" data-text="SYSTEM BREACHED">SYSTEM BREACHED</span>
       </div>
-      <button onclick="logout()">LOGOUT &amp; REPLAY</button>
+
+      <!-- Skull icon ring -->
+      <div class="win-skull-ring">
+        <div class="win-skull-inner">💀</div>
+      </div>
+
+      <!-- ACCESS GRANTED heading -->
+      <h2 class="win-heading" data-text="ACCESS GRANTED">ACCESS GRANTED</h2>
+
+      <!-- Subline -->
+      <div class="win-subline">⚡ SECURITY PROTOCOLS ELIMINATED ⚡</div>
+
+      <!-- Divider -->
+      <div class="win-divider"></div>
+
+      <!-- Stats grid -->
+      <div class="win-stats-grid">
+        <div class="win-stat-card">
+          <div class="win-stat-label">OPERATIVE</div>
+          <div class="win-stat-value" id="winTeamName"></div>
+        </div>
+        <div class="win-stat-card">
+          <div class="win-stat-label">UPLINKS USED</div>
+          <div class="win-stat-value" id="winAttemptsUsed"></div>
+        </div>
+        <div class="win-stat-card">
+          <div class="win-stat-label">BREACH TIME</div>
+          <div class="win-stat-value" id="winTimeTaken"></div>
+        </div>
+      </div>
+
+      <!-- Secret Key Reveal -->
+      <div class="win-key-section">
+        <div class="win-key-label">🔓 CLASSIFIED SECRET CODE EXTRACTED</div>
+        <div class="win-key-box">
+          <div class="win-key-scramble" id="winKeyScramble">DECRYPTING...</div>
+          <div class="win-key-value hidden" id="winKeyValue"></div>
+        </div>
+        <div class="win-key-tip">Screenshot this — it's proof of your breach.</div>
+      </div>
+
+      <!-- Action button -->
+      <button class="win-exit-btn" onclick="logout()">
+        <span>⏻ DISCONNECT &amp; REPLAY</span>
+      </button>
+
     </div>
   </div>
 

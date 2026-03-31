@@ -1,6 +1,5 @@
 const { teams, leaderboard } = require("../models/collections");
 
-// POST /team/login
 const loginTeam = async (req, res) => {
     try {
         const { teamId, password } = req.body;
@@ -19,7 +18,6 @@ const loginTeam = async (req, res) => {
     }
 };
 
-// POST /team/start
 const startTeam = async (req, res) => {
     try {
         const { teamId } = req.body;
@@ -38,7 +36,6 @@ const startTeam = async (req, res) => {
     }
 };
 
-// GET /api/leaderboard (public)
 const getPublicLeaderboard = async (req, res) => {
     try {
         const board = await leaderboard()

@@ -12,19 +12,16 @@ const chatRoutes    = require("./routes/chatRoutes");
 
 const app = express();
 
-// ── Middleware ────────────────────────────────────────────────
 app.use(cors());
 app.use(express.json());
 app.use(express.static(path.join(__dirname, "public")));
 
-// ── Routes ────────────────────────────────────────────────────
 app.use("/",      pageRoutes);
 app.use("/admin", adminRoutes);
 app.use("/team",  teamRoutes);
 app.use("/api",   apiRoutes);
 app.use("/chat",  chatRoutes);
 
-// ── Start ─────────────────────────────────────────────────────
 connectDB()
     .then(() => {
         const PORT = process.env.PORT || 3000;
