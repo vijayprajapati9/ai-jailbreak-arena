@@ -1,7 +1,5 @@
 const axios = require("axios");
-const fs = require("fs").promises;
-const path = require("path");
-const { teams, leaderboard, chats } = require("../models/collections");
+const { teams, leaderboard, teamChatCollection } = require("../models/collections");
 
 const API_KEY = process.env.GROQ_API_KEY;
 const SECRET  = process.env.SECRET;
@@ -94,30 +92,13 @@ Begin.
         const aiReply = aiResponse.data.choices[0].message.content;
 
         try {
-            await chats().insertOne({
-                teamId,
+            await teamChatCollection(teamId).insertOne({
                 message,
                 reply: aiReply,
                 timestamp: new Date().toISOString()
             });
         } catch (dbErr) {
-            console.error("[chatController] Error saving chat to database:", dbErr.message);
-        }
-
-        // Save chat locally per team
-        try {
-            const cleanTeamId = String(teamId).replace(/[^a-zA-Z0-9_-]/g, "");
-            const logDir = path.join(__dirname, "..", "chat_logs", cleanTeamId);
-            await fs.mkdir(logDir, { recursive: true });
-
-            const logFile = path.join(logDir, "chat_history.txt");
-            const logContent = `[${new Date().toISOString()}]
-User: ${message}
-AI: ${aiReply}
---------------------------------------------------\n`;
-            await fs.appendFile(logFile, logContent);
-        } catch (fsErr) {
-            console.error("[chatController] Error writing chat to local file:", fsErr.message);
+            console.error("[chatController] Error saving chat to team's database collection:", dbErr.message);
         }
 
         if (aiReply.includes(SECRET)) {
