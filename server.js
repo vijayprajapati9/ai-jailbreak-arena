@@ -24,7 +24,7 @@ app.use("/chat",  chatRoutes);
 
 connectDB()
     .then(() => {
-        const PORT = process.env.PORT || 3000;
+        const PORT = process.env.PORT;
         app.listen(PORT, "0.0.0.0", () => {
             console.log(`AI Jailbreak Arena running on http://localhost:${PORT}`);
             console.log(`Admin Panel: http://localhost:${PORT}/admin`);
