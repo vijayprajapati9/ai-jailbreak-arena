@@ -35,3 +35,11 @@ connectDB()
         console.error("MongoDB connection failed:", err.message);
         process.exit(1);
     });
+
+connectDB()
+  .then(() => {
+    console.log("MongoDB connected!");
+  })
+  .catch(err => {
+    console.error("MongoDB connection failed:", err.message);
+  });
